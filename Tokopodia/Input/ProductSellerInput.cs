@@ -1,6 +1,6 @@
 ﻿namespace Tokopodia.Input
 {
-    public record ProductInput
+    public record ProductSellerInput
      (
          int? Id,
          string Name,

@@ -15,21 +15,30 @@ namespace Tokopodia.GraphQL
     {
         [Authorize]
         public async Task<Product> AddProductAsync(
-            ProductInput input,
+            ProductSellerInput input,
             [Service] AppDbContext context,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
             var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            //var seller = context.Sellers.Where(o => o.SellerId == sellerId).FirstOrDefault();
 
+            if (sellerId == null)
+            {
+                Console.WriteLine("Seller tidak ditemukan");
+            }
+            //if (seller.LatSeller == null || seller.LongSeller == null)
+            //{
+            //    Console.WriteLine("Seller belum input lokasi")
+            //}
             var product = new Product
             {
                 SellerId = sellerId,
                 Name = input.Name,
                 Category = input.Category,
                 Description = input.Description,
-                Stock = input.Stock,
-                Price = input.Price,
-                Weight = input.Weight,
+                Stock = Math.Abs(input.Stock),
+                Price = Math.Abs(input.Price),
+                Weight = Math.Abs(input.Weight),
                 Created = DateTime.Now
             };
 
@@ -42,7 +51,7 @@ namespace Tokopodia.GraphQL
         [Authorize]
         public async Task<Product> UpdateProductAsync(
             int id,
-            ProductInput input,
+            ProductSellerInput input,
             [Service] AppDbContext context,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
@@ -53,8 +62,9 @@ namespace Tokopodia.GraphQL
             if (product != null)
             {
                 product.Name = input.Name;
-                product.Stock = input.Stock;
-                product.Price = input.Price;
+                product.Stock = Math.Abs(input.Stock);
+                product.Price = Math.Abs(input.Price);
+                product.Weight = Math.Abs(input.Weight);
 
                 context.Products.Update(product);
                 await context.SaveChangesAsync();
@@ -73,13 +83,19 @@ namespace Tokopodia.GraphQL
             var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var seller = context.Products.Where(o => o.SellerId == sellerId).FirstOrDefault();
 
+            //var transaction = context.Transactions.Where(o => o.productId == id).FirstOrDefault();
+
             var product = context.Products.Where(o => o.Id == id).FirstOrDefault();
             if (product != null)
             {
-                context.Products.Remove(product);
-                await context.SaveChangesAsync();
+                //if (transaction == null)
+                //{
+                //    context.Products.Remove(product);
+                //    await context.SaveChangesAsync();
+                //}
+                //else { Console.WriteLine("Product in Transaction"); }
             }
-
+            else { Console.WriteLine("Product not found"); }
 
             return await Task.FromResult(product);
         }
