@@ -12,5 +12,6 @@ namespace Tokopodia.Data
     }
     public DbSet<BuyerProfile> BuyerProfiles { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
+
   }
 }
