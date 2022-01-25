@@ -1,4 +1,5 @@
 ﻿using HotChocolate;
+using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace Tokopodia.Querys
     [Obsolete]
     public class QueryProduct
     {
+        [Authorize(Roles = new[] { "Seller" })]
         public ProductSellerOutput GetProductForSeller(
         [Service] AppDbContext context,
         [Service] IHttpContextAccessor httpContextAccessor)

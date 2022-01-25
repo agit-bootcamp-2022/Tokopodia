@@ -16,7 +16,7 @@ namespace Tokopodia.Mutations
     [Obsolete]
     public class MutationProduct
     {
-        [Authorize]
+        [Authorize(Roles = new[] { "Seller" })]
         public async Task<Product> AddProductAsync(
             ProductSellerInput input,
             [Service] AppDbContext context,
@@ -55,7 +55,7 @@ namespace Tokopodia.Mutations
             return ret.Entity;
         }
 
-        [Authorize]
+        [Authorize(Roles = new[] { "Seller" })]
         public async Task<Product> UpdateProductAsync(
             int id,
             ProductSellerInput input,
@@ -86,7 +86,7 @@ namespace Tokopodia.Mutations
             return await Task.FromResult(product);
         }
 
-        [Authorize]
+        [Authorize(Roles = new[] { "Seller" })]
         public async Task<Product> DeleteProductByIdAsync(
             int id,
             [Service] AppDbContext context,
