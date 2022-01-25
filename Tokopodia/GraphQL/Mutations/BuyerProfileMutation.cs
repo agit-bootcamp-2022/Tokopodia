@@ -13,15 +13,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Tokopodia.GraphQL
+namespace Tokopodia.GraphQL.Mutations
 {
-    [ExtendObjectType(Name = "Mutation")]
-    [Obsolete]
-  public class Mutation
+  [ExtendObjectType(Name = "Mutation")]
+  [System.Obsolete]
+  public class BuyerProfileMutation
   {
-    public string SetHelloWorld()
+    public string SetHelloWorldBuyer()
     {
-      return "Hello World!";
+      return "Hello World! buyer";
     }
   }
 
