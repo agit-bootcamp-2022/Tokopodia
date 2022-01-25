@@ -60,12 +60,29 @@ namespace Tokopodia.Data
                 return;
             }
 
-            var students = new Product[]
+            var products = new Product[]
             {
-                
+                new Product{SellerId = 1, Name = "Batman Action Figure", Category= "Toys" , 
+                    Description="Batman action figure for collectible, DC Original" , Stock= 20, 
+                    Price=300000, Weight=100 ,Created= DateTime.Now},
+                new Product{SellerId = 1, Name = "Superman Action Figure", Category= "Toys" ,
+                    Description="Superman action figure for collectible, DC Original" , Stock= 10,
+                    Price=350000, Weight=100 ,Created= DateTime.Now},
+                new Product{SellerId = 1, Name = "Power Bank", Category= "Technology" ,
+                    Description="Power bank for convinient phone charger" , Stock= 10,
+                    Price=500000, Weight=200 ,Created= DateTime.Now},
+                new Product{SellerId = 2, Name = "IronMan T-Shirt", Category= "Clothed" ,
+                    Description="T-Shirt with arc reactor symbol" , Stock= 30,
+                    Price=100000, Weight=20 ,Created= DateTime.Now},
+                new Product{SellerId = 2, Name = "Doctor Strange T-Shirt", Category= "Clothed" ,
+                    Description="T-Shirt with sactum sactorium symbol" , Stock= 30,
+                    Price=100000, Weight=20 ,Created= DateTime.Now},
+                new Product{SellerId = 3, Name = "Samsung S20", Category= "Technology" ,
+                    Description="Samsung S20 Phone" , Stock= 7,
+                    Price=3000000, Weight=120 ,Created= DateTime.Now},
             };
 
-            foreach (var s in students)
+            foreach (var s in products)
             {
                 context.Products.Add(s);
             }

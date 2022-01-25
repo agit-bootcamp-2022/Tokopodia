@@ -4,7 +4,10 @@
      (
          int? Id,
          string Name,
+         string Category,
+         string Description,
          int Stock,
-         double Price
+         double Price,
+         double Weight
      );
 }

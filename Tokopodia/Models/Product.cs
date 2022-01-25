@@ -10,8 +10,8 @@ namespace Tokopodia.Models
         public string Category { get; set; }
         public string Description { get; set; }
         public int Stock { get; set; }
-        public float Price { get; set; }
-        public float Weight { get; set; }
+        public double Price { get; set; }
+        public double Weight { get; set; }
         public DateTime Created { get; set; }
     }
 }

@@ -31,7 +31,18 @@ namespace Tokopodia
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+        options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+
+      services.AddTransient<DbInitializer>();
+
+      services
+        .AddGraphQLServer()
+        .AddAuthorization()
+        .AddQueryType<Query>()
+        .AddMutationType<MutationProduct>();
+      
+      services.AddHttpContextAccessor();
+
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
           options.Password.RequiredLength = 8;
@@ -41,19 +52,11 @@ namespace Tokopodia
           options.Password.RequireDigit = true;
         }).AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
 
-      services.AddTransient<DbInitializer>();
-
-      services.AddAuthorization();
-      services
-        .AddGraphQLServer()
-        .AddAuthorization()
-        .AddQueryType<Query>()
-        .AddMutationType<Mutation>();
-
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
       var appSettings = appSettingSection.Get<AppSettings>();
       var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
       services.AddAuthentication(x =>
       {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
