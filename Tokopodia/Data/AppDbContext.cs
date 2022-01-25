@@ -10,8 +10,9 @@ namespace Tokopodia.Data
     {
 
     }
+    public DbSet<Product> Products { get; set; }
     public DbSet<BuyerProfile> BuyerProfiles { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
-
+    public DbSet<Cart> Carts { get; set; }
   }
 }
