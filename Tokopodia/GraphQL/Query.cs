@@ -5,7 +5,7 @@ using HotChocolate;
 using HotChocolate.Types;
 using Microsoft.Extensions.Options;
 
-namespace Tokopodia.Querys
+namespace Tokopodia.Graphql
 {
     [ExtendObjectType(Name = "Query")]
     [Obsolete]

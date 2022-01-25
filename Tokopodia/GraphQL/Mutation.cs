@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Tokopodia.Mutations
+namespace Tokopodia.GraphQL
 {
     [ExtendObjectType(Name = "Mutation")]
     [Obsolete]

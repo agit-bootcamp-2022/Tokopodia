@@ -13,7 +13,7 @@ using Tokopodia.Input;
 using Tokopodia.Models;
 using Tokopodia.Output;
 
-namespace Tokopodia.Querys
+namespace Tokopodia.GraphQL.Querys
 {
     [ExtendObjectType(Name = "Query")]
     [Obsolete]

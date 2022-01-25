@@ -10,7 +10,7 @@ using Tokopodia.Data;
 using Tokopodia.Input;
 using Tokopodia.Models;
 
-namespace Tokopodia.Mutations
+namespace Tokopodia.GraphQL.Mutations
 {
     [ExtendObjectType(Name = "Mutation")]
     [Obsolete]
