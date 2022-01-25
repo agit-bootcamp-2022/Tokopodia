@@ -15,6 +15,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Tokopodia.Data;
 using Tokopodia.GraphQL;
+using Tokopodia.GraphQL.Mutations;
+using Tokopodia.GraphQL.Queries;
 using Tokopodia.Helpers;
 
 namespace Tokopodia
@@ -28,6 +30,7 @@ namespace Tokopodia
     }
     public IConfiguration Configuration { get; }
 
+    [Obsolete]
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<AppDbContext>(options =>
@@ -47,8 +50,12 @@ namespace Tokopodia
       services
         .AddGraphQLServer()
         .AddAuthorization()
-        .AddQueryType<Query>()
-        .AddMutationType<Mutation>();
+        .AddQueryType(d => d.Name("Query"))
+          .AddTypeExtension<BuyerProfileQuery>()
+          .AddTypeExtension<SellerProfileQuery>()
+        .AddMutationType(d => d.Name("Mutation"))
+          .AddTypeExtension<BuyerProfileMutation>()
+          .AddTypeExtension<SellerProfileMutation>();
 
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
