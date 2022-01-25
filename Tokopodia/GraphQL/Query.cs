@@ -9,7 +9,7 @@ namespace Tokopodia.Graphql
 {
     [ExtendObjectType(Name = "Query")]
     [Obsolete]
-    public class Query
+  public class Query
   {
 
     public string GetHelloWorld()
