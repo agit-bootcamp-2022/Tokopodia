@@ -10,7 +10,7 @@ using Tokopodia.Data;
 using Tokopodia.Input;
 using Tokopodia.Models;
 
-namespace Tokopodia.GraphQL
+namespace Tokopodia.Mutations
 {
     [ExtendObjectType(Name = "Mutation")]
     [Obsolete]
@@ -25,23 +25,27 @@ namespace Tokopodia.GraphQL
             var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             //var seller = context.Sellers.Where(o => o.SellerId == sellerId).FirstOrDefault();
 
-            if (sellerId == null)
-            {
-                Console.WriteLine("Seller tidak ditemukan");
-            }
+            //if (seller == null)
+            //{
+            //    Console.WriteLine("Seller tidak ditemukan");
+            //}
             //if (seller.LatSeller == null || seller.LongSeller == null)
             //{
             //    Console.WriteLine("Seller belum input lokasi")
             //}
+            if (input.Stock < 0 || input.Price < 0 || input.Weight < 0)
+            {
+                Console.WriteLine("Value cannot be negative");
+            }
             var product = new Product
             {
                 SellerId = sellerId,
                 Name = input.Name,
                 Category = input.Category,
                 Description = input.Description,
-                Stock = Math.Abs(input.Stock),
-                Price = Math.Abs(input.Price),
-                Weight = Math.Abs(input.Weight),
+                Stock = input.Stock,
+                Price = input.Price,
+                Weight = input.Weight,
                 Created = DateTime.Now
             };
 
@@ -61,13 +65,18 @@ namespace Tokopodia.GraphQL
             var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var seller = context.Products.Where(o => o.SellerId == sellerId).FirstOrDefault();
 
+            if (input.Stock < 0 || input.Price < 0 || input.Weight < 0)
+            {
+                Console.WriteLine("Value cannot be negative");
+            }
+
             var product = context.Products.Where(o => o.Id == id).FirstOrDefault();
             if (product != null)
             {
                 product.Name = input.Name;
-                product.Stock = Math.Abs(input.Stock);
-                product.Price = Math.Abs(input.Price);
-                product.Weight = Math.Abs(input.Weight);
+                product.Stock = input.Stock;
+                product.Price = input.Price;
+                product.Weight = input.Weight;
 
                 context.Products.Update(product);
                 await context.SaveChangesAsync();

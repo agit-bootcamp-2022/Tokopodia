@@ -14,7 +14,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tokopodia.Data;
-using Tokopodia.GraphQL;
+using Tokopodia.Mutations;
+using Tokopodia.Querys;
 using Tokopodia.Helpers;
 
 namespace Tokopodia
