@@ -28,20 +28,28 @@ namespace Tokopodia
     }
     public IConfiguration Configuration { get; }
 
-    public void ConfigureServices(IServiceCollection services)
+        [Obsolete]
+        public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+        options.UseSqlServer(Configuration.GetConnectionString("LocalDatabase")));
 
       services.AddTransient<DbInitializer>();
 
       services
         .AddGraphQLServer()
         .AddAuthorization()
-        .AddQueryType<Query>()
-        .AddMutationType<MutationProduct>();
-      
-      services.AddHttpContextAccessor();
+           .AddQueryType(d => d.Name("Query"))
+               .AddTypeExtension<Query>()
+               .AddTypeExtension<QueryProduct>()
+           .AddMutationType(d => d.Name("Mutation"))
+               .AddTypeExtension<Mutation>()
+               .AddTypeExtension<MutationProduct>();
+
+            services.AddHttpContextAccessor();
+
+
+      services.AddControllers();
 
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
@@ -65,7 +73,7 @@ namespace Tokopodia
       {
         x.RequireHttpsMetadata = false;
         x.SaveToken = true;
-        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        x.TokenValidationParameters = new TokenValidationParameters
         {
           ValidateIssuerSigningKey = true,
           IssuerSigningKey = new SymmetricSecurityKey(key),

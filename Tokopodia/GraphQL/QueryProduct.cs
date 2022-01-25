@@ -1,4 +1,5 @@
 ﻿using HotChocolate;
+using HotChocolate.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,9 +14,11 @@ using Tokopodia.Output;
 
 namespace Tokopodia.GraphQL
 {
+    [ExtendObjectType(Name = "Query")]
+    [Obsolete]
     public class QueryProduct
     {
-        public ProductSellerOutput GetProductForSellerAsync(
+        public ProductSellerOutput GetProductForSeller(
         [Service] AppDbContext context,
         [Service] IHttpContextAccessor httpContextAccessor)
         {
@@ -26,7 +29,7 @@ namespace Tokopodia.GraphQL
             return new ProductSellerOutput(product);
         }
 
-        public ProductBuyerOutput GetProductForBuyerAsync(
+        public ProductBuyerOutput GetProductForBuyer(
         ProductBuyerInput input,
         [Service] AppDbContext context)
         {
@@ -46,7 +49,7 @@ namespace Tokopodia.GraphQL
 
             if (input.MinPrice != null)
             {
-                var productsmin = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price < input.MinPrice);
+                var productsmin = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price > input.MinPrice);
                 return new ProductBuyerOutput(productsmin);
             }
 

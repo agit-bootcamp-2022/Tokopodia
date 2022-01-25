@@ -1,5 +1,6 @@
 ﻿using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
+using HotChocolate.Types;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
@@ -11,6 +12,8 @@ using Tokopodia.Models;
 
 namespace Tokopodia.GraphQL
 {
+    [ExtendObjectType(Name = "Mutation")]
+    [Obsolete]
     public class MutationProduct
     {
         [Authorize]

@@ -8,13 +8,16 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
+using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Tokopodia.GraphQL
 {
-  public class Mutation
+    [ExtendObjectType(Name = "Mutation")]
+    [Obsolete]
+    public class Mutation
   {
     public string SetHelloWorld()
     {
