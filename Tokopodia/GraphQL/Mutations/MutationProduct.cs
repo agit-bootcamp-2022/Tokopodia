@@ -95,17 +95,19 @@ namespace Tokopodia.GraphQL.Mutations
             var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var seller = context.Products.Where(o => o.SellerId == sellerId).FirstOrDefault();
 
-            //var transaction = context.Transactions.Where(o => o.productId == id).FirstOrDefault();
+            var cart = context.Carts.Where(o => o.ProductId == id).FirstOrDefault();
 
             var product = context.Products.Where(o => o.Id == id).FirstOrDefault();
             if (product != null)
             {
-                //if (transaction == null)
-                //{
-                //    context.Products.Remove(product);
-                //    await context.SaveChangesAsync();
-                //}
-                //else { Console.WriteLine("Product in Transaction"); }
+                if (cart != null)
+                {
+                    context.Carts.Remove(cart);
+                    await context.SaveChangesAsync();
+                }
+
+                context.Products.Remove(product);
+                await context.SaveChangesAsync();
             }
             else { Console.WriteLine("Product not found"); }
 
