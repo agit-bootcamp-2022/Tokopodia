@@ -35,6 +35,7 @@ namespace Tokopodia
     {
       services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
           options.Password.RequiredLength = 8;
@@ -56,6 +57,8 @@ namespace Tokopodia
         .AddMutationType(d => d.Name("Mutation"))
           .AddTypeExtension<BuyerProfileMutation>()
           .AddTypeExtension<SellerProfileMutation>();
+
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
