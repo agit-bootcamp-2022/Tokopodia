@@ -14,10 +14,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tokopodia.Data;
+using Tokopodia.Helpers;
+using Tokopodia.Graphql;
+using Tokopodia.GraphQL.Queries;
 using Tokopodia.GraphQL;
 using Tokopodia.GraphQL.Mutations;
-using Tokopodia.GraphQL.Queries;
-using Tokopodia.Helpers;
 
 namespace Tokopodia
 {
@@ -30,12 +31,35 @@ namespace Tokopodia
     }
     public IConfiguration Configuration { get; }
 
-    [Obsolete]
-    public void ConfigureServices(IServiceCollection services)
+        [Obsolete]
+        public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+        options.UseSqlServer(Configuration.GetConnectionString("LocalDatabase")));
 
+      services.AddTransient<DbInitializer>();
+
+      services
+        .AddGraphQLServer()
+        .AddAuthorization()
+           .AddQueryType(d => d.Name("Query"))
+               .AddTypeExtension<Query>()
+               .AddTypeExtension<QueryProduct>()
+               .AddTypeExtension<BuyerProfileQuery>()
+               .AddTypeExtension<SellerProfileQuery>()
+           .AddMutationType(d => d.Name("Mutation"))
+               .AddTypeExtension<Mutation>()
+               .AddTypeExtension<MutationProduct>()
+               .AddTypeExtension<BuyerProfileMutation>()
+               .AddTypeExtension<SellerProfileMutation>();
+
+            services.AddHttpContextAccessor();
+
+
+      services.AddControllers();
+          
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+          
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
           options.Password.RequiredLength = 8;
@@ -45,25 +69,12 @@ namespace Tokopodia
           options.Password.RequireDigit = true;
         }).AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
 
-      services.AddTransient<DbInitializer>();
-
-      services.AddAuthorization();
-      services
-        .AddGraphQLServer()
-        .AddAuthorization()
-        .AddQueryType(d => d.Name("Query"))
-          .AddTypeExtension<BuyerProfileQuery>()
-          .AddTypeExtension<SellerProfileQuery>()
-        .AddMutationType(d => d.Name("Mutation"))
-          .AddTypeExtension<BuyerProfileMutation>()
-          .AddTypeExtension<SellerProfileMutation>();
-
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
       var appSettings = appSettingSection.Get<AppSettings>();
       var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
       services.AddAuthentication(x =>
       {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -72,7 +83,7 @@ namespace Tokopodia
       {
         x.RequireHttpsMetadata = false;
         x.SaveToken = true;
-        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        x.TokenValidationParameters = new TokenValidationParameters
         {
           ValidateIssuerSigningKey = true,
           IssuerSigningKey = new SymmetricSecurityKey(key),

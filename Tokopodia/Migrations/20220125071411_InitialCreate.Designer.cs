@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tokopodia.Data;
 
 namespace Tokopodia.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220125071411_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,6 +258,7 @@ namespace Tokopodia.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
@@ -283,49 +286,6 @@ namespace Tokopodia.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-                });   
-            
-            modelBuilder.Entity("Tokopodia.Models.Cart", b =>
-                {
-                    b.Property<float>("BillingSeller")
-                        .HasColumnType("real");
-
-                    b.Property<int>("BuyerId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("LatBuyer")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LatSeller")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LongBuyer")
-                        .HasColumnType("float");
-
-                    b.Property<double>("LongSeller")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SellerId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("ShippingCost")
-                        .HasColumnType("real");
-
-                    b.Property<string>("ShippingType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
