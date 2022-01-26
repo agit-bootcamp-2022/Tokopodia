@@ -15,8 +15,8 @@ namespace Tokopodia.Helper
         return error.WithMessage($"Data tidak ditemukan.");
       if (error.Exception is UserLockedException ule)
         return error.WithMessage($"User status locked.");
-      if (error.Exception is RegistrationFailed rf)
-        return error.WithMessage(rf.Message);
+      if (error.Exception is DataFailed df)
+        return error.WithMessage(df.Message);
       return error;
     }
 
@@ -31,8 +31,8 @@ namespace Tokopodia.Helper
 
   public class DataNotFound : Exception { }
   public class UserLockedException : Exception { }
-  public class RegistrationFailed : Exception
+  public class DataFailed : Exception
   {
-    public RegistrationFailed(string message) : base(message) { }
+    public DataFailed(string message) : base(message) { }
   }
 }

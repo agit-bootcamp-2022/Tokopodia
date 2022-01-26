@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Tokopodia.Helpers;
+using Tokopodia.Input;
 using Tokopodia.Output;
 
-namespace Tokopodia.Data.User
+namespace Tokopodia.Data.Users
 {
   public class UserDAL : IUser
   {
@@ -28,24 +29,23 @@ namespace Tokopodia.Data.User
       _roleManager = roleManager;
       _appSettings = appSettings.Value;
     }
-    public async Task<LoginOutput> Authenticate(IdentityUser user)
+    public async Task<LoginOutput> Authenticate(LoginInput user)
     {
-      var account = await _userManager.FindByNameAsync(user.UserName);
+      var account = await _userManager.FindByNameAsync(user.Username);
       if (account == null)
       {
         throw new Exception("Invalid username or password.");
       }
-      Console.WriteLine("pass: " + user.PasswordHash);
       var userFind = await _userManager.CheckPasswordAsync(
-             account, user.PasswordHash);
+             account, user.Password);
       if (!userFind)
       {
         throw new Exception("Invalid username or password.");
       }
       List<Claim> claims = new List<Claim>();
-      claims.Add(new Claim(ClaimTypes.Name, user.UserName));
-      claims.Add(new Claim("UserId", user.Id.ToString()));
-      var roles = await GetRolesFromUser(user.UserName);
+      claims.Add(new Claim(ClaimTypes.Name, account.UserName));
+      claims.Add(new Claim("UserId", account.Id.ToString()));
+      var roles = await GetRolesFromUser(account.UserName);
       foreach (var role in roles)
       {
         claims.Add(new Claim(ClaimTypes.Role, role));
@@ -97,5 +97,13 @@ namespace Tokopodia.Data.User
       }
       return roles;
     }
+
+    public async Task<IdentityUser> UpdateRole(IdentityUser user, string role)
+    {
+      var result = await _userManager.FindByIdAsync(user.Id);
+      await _userManager.AddToRoleAsync(result, role);
+      return result;
+    }
+
   }
 }

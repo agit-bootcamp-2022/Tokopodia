@@ -22,17 +22,17 @@ namespace Tokopodia.Data
       _context.Database.EnsureCreated();
       var roleStore = new RoleStore<IdentityRole>(_context);
 
-      if (!_context.Roles.Any(r => r.Name == "buyer"))
+      if (!_context.Roles.Any(r => r.Name == "Buyer"))
       {
-        await roleStore.CreateAsync(new IdentityRole { Name = "buyer", NormalizedName = "BUYER" });
+        await roleStore.CreateAsync(new IdentityRole { Name = "Buyer", NormalizedName = "BUYER" });
       }
-      if (!_context.Roles.Any(r => r.Name == "seller"))
+      if (!_context.Roles.Any(r => r.Name == "Seller"))
       {
-        await roleStore.CreateAsync(new IdentityRole { Name = "seller", NormalizedName = "SELLER" });
+        await roleStore.CreateAsync(new IdentityRole { Name = "Seller", NormalizedName = "SELLER" });
       }
-      if (!_context.Roles.Any(r => r.Name == "courier"))
+      if (!_context.Roles.Any(r => r.Name == "Courier"))
       {
-        await roleStore.CreateAsync(new IdentityRole { Name = "courier", NormalizedName = "COURIER" });
+        await roleStore.CreateAsync(new IdentityRole { Name = "Courier", NormalizedName = "COURIER" });
       }
       if (!_context.Users.Any(u => u.UserName == "courier1"))
       {
