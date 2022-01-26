@@ -19,6 +19,7 @@ using Tokopodia.Graphql;
 using Tokopodia.GraphQL.Queries;
 using Tokopodia.GraphQL;
 using Tokopodia.GraphQL.Mutations;
+using Tokopodia.GraphQL.Queries;
 
 namespace Tokopodia
 {
@@ -44,7 +45,8 @@ namespace Tokopodia
         .AddAuthorization()
            .AddQueryType(d => d.Name("Query"))
                .AddTypeExtension<Query>()
-               .AddTypeExtension<ProductQuery>()
+               .AddTypeExtension<QueryProduct>()
+               .AddTypeExtension<QueryCart>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
            .AddMutationType(d => d.Name("Mutation"))
