@@ -5,8 +5,8 @@ namespace Tokopodia.Models
 {
   public enum Status
   {
-    OnProgress,
-    Finished
+    Paid,
+    Completed
   }
   public class Transaction
   {
@@ -15,10 +15,7 @@ namespace Tokopodia.Models
     public int TransactionId { get; set; }
 
     // sesuaikan dengan cart id yang akan dibuat
-    // public ICollection<Cart> Carts { get; set; } 
-
-    // menunggu dari shipping service
-    // public int ShippingId { get; set; }
+    public ICollection<Cart> Carts { get; set; }
 
     [Required]
     public string Address { get; set; }
@@ -27,7 +24,7 @@ namespace Tokopodia.Models
     public double SumBillingSeller { get; set; }
 
     [Required]
-    public double SumBillingAntar { get; set; }
+    public double SumShippingCost { get; set; }
 
     [Required]
     public double TotalBilling { get; set; }
@@ -36,6 +33,12 @@ namespace Tokopodia.Models
     public Status status { get; set; }
 
     public string Token { get; set; }
+
+    // menunggu dari shipping service
+    // public int ShippingId { get; set; }
+
+    // menunggu dari wallet service
+    // public int WalletTransactionId { get; set; }
 
   }
 }

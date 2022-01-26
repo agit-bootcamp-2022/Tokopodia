@@ -20,6 +20,8 @@ using Tokopodia.GraphQL.Querys;
 using Tokopodia.GraphQL;
 using Tokopodia.GraphQL.Mutations;
 using Tokopodia.GraphQL.Queries;
+using Tokopodia.Helper;
+using Tokopodia.Data.User;
 
 namespace Tokopodia
 {
@@ -56,6 +58,7 @@ namespace Tokopodia
       services
         .AddGraphQLServer()
         .AddAuthorization()
+        .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true)
            .AddQueryType(d => d.Name("Query"))
                .AddTypeExtension<Query>()
                .AddTypeExtension<QueryProduct>()
@@ -68,8 +71,9 @@ namespace Tokopodia
                .AddTypeExtension<SellerProfileMutation>();
 
       services.AddHttpContextAccessor();
-
-
+      services.AddErrorFilter<GraphQLErrorFilter>();
+      services.AddScoped<IUser, UserDAL>();
+      services.AddScoped<UserManager<IdentityUser>>();
       services.AddControllers();
 
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -79,7 +83,8 @@ namespace Tokopodia
           options.Password.RequireUppercase = true;
           options.Password.RequireNonAlphanumeric = true;
           options.Password.RequireDigit = true;
-        }).AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
+        })
+        .AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
 
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
