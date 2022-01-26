@@ -62,6 +62,7 @@ namespace Tokopodia
            .AddQueryType(d => d.Name("Query"))
                .AddTypeExtension<Query>()
                .AddTypeExtension<QueryProduct>()
+               .AddTypeExtension<QueryCart>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
            .AddMutationType(d => d.Name("Mutation"))
