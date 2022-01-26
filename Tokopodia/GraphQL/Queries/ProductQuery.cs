@@ -17,7 +17,7 @@ namespace Tokopodia.GraphQL.Queries
 {
     [ExtendObjectType(Name = "Query")]
     [Obsolete]
-    public class QueryProduct
+    public class ProductQuery
     {
         [Authorize(Roles = new[] { "Seller" })]
         public ProductSellerOutput GetProductForSeller(

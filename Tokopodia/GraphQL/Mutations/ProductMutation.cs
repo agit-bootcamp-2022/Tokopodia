@@ -14,7 +14,7 @@ namespace Tokopodia.GraphQL.Mutations
 {
     [ExtendObjectType(Name = "Mutation")]
     [Obsolete]
-    public class MutationProduct
+    public class ProductMutation
     {
         [Authorize(Roles = new[] { "Seller" })]
         public async Task<Product> AddProductAsync(
@@ -23,16 +23,16 @@ namespace Tokopodia.GraphQL.Mutations
             [Service] IHttpContextAccessor httpContextAccessor)
         {
             var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            //var seller = context.Sellers.Where(o => o.SellerId == sellerId).FirstOrDefault();
+            var seller = context.SellerProfiles.Where(o => Convert.ToInt64(o.UserId) == sellerId).FirstOrDefault();
 
-            //if (seller == null)
-            //{
-            //    Console.WriteLine("Seller tidak ditemukan");
-            //}
-            //if (seller.LatSeller == null || seller.LongSeller == null)
-            //{
-            //    Console.WriteLine("Seller belum input lokasi")
-            //}
+            if (seller == null)
+            {
+                Console.WriteLine("Seller tidak ditemukan");
+            }
+            if (seller.LatSeller == 0 || seller.LongSeller == 0)
+            {
+                Console.WriteLine("Seller belum input lokasi");
+            }
             if (input.Stock < 0 || input.Price < 0 || input.Weight < 0)
             {
                 Console.WriteLine("Value cannot be negative");

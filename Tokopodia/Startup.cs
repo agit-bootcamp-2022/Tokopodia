@@ -9,10 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Tokopodia.Data;
 using Tokopodia.Helpers;
 using Tokopodia.Graphql;
@@ -61,13 +58,13 @@ namespace Tokopodia
         .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true)
            .AddQueryType(d => d.Name("Query"))
                .AddTypeExtension<Query>()
-               .AddTypeExtension<QueryProduct>()
+               .AddTypeExtension<ProductQuery>()
                .AddTypeExtension<QueryCart>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
-               .AddTypeExtension<MutationProduct>()
+               .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
                .AddTypeExtension<SellerProfileMutation>();
 
