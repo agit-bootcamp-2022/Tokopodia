@@ -44,12 +44,12 @@ namespace Tokopodia
         .AddAuthorization()
            .AddQueryType(d => d.Name("Query"))
                .AddTypeExtension<Query>()
-               .AddTypeExtension<QueryProduct>()
+               .AddTypeExtension<ProductQuery>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
-               .AddTypeExtension<MutationProduct>()
+               .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
                .AddTypeExtension<SellerProfileMutation>();
 

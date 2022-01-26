@@ -55,6 +55,7 @@ namespace Tokopodia.Data
         {
             context.Database.EnsureCreated();
 
+            //Product
             if (context.Products.Any())
             {
                 return;
@@ -82,18 +83,14 @@ namespace Tokopodia.Data
                     Price=3000000, Weight=120 ,Created= DateTime.Now},
             };
 
-            foreach (var s in products)
+            foreach (var p in products)
             {
-                context.Products.Add(s);
+                context.Products.Add(p);
             }
 
             context.SaveChanges();
-    }
 
-        public static void Initialize(AppDbContext context)
-        {
-            context.Database.EnsureCreated();
-
+            //Carts
             if (context.Carts.Any())
             {
                 return;
@@ -111,6 +108,46 @@ namespace Tokopodia.Data
             foreach (var c in carts)
             {
                 context.Carts.Add(c);
+            }
+
+            context.SaveChanges();
+
+            //Seller
+            if (context.SellerProfiles.Any())
+            {
+                return;
+            }
+
+            var sellers = new SellerProfile[]
+            {
+                new SellerProfile() { UserId = "1", Username = "ClarkKent", ShopName = "KryptonStore", Address = "Metropolis 202 Street", CreatedAt = DateTime.Now, LatSeller = -6.225407736894751, LongSeller = 106.94341773119231},
+                new SellerProfile() { UserId = "2", Username = "BruceWayne", ShopName = "WayneStore", Address = "Gotham 101 Street", CreatedAt = DateTime.Now, LatSeller = -6.217151172929278, LongSeller = 106.92365729212868},
+                new SellerProfile() { UserId = "3", Username = "DianaPrince", ShopName = "AmazonianStore", Address = "Amazon 32 Street", CreatedAt = DateTime.Now, LatSeller = -6.562351172923248, LongSeller = 106.933457513245868}
+            };
+
+            foreach (var s in sellers)
+            {
+                context.SellerProfiles.Add(s);
+            }
+
+            context.SaveChanges();
+
+            //Buyer
+            if (context.BuyerProfiles.Any())
+            {
+                return;
+            }
+
+            var buyers = new BuyerProfile[]
+            {
+                new BuyerProfile() { UserId = "4", FirstName = "Steve", LastName = "Rogers", CreatedAt = DateTime.Now, latBuyer = -6.206607748846436, longBuyer = 106.94433053307974},
+                new BuyerProfile() { UserId = "5", FirstName = "Tony", LastName = "Stark", CreatedAt = DateTime.Now, latBuyer = -6.204530320309839, longBuyer = 106.94925525069073},
+                new BuyerProfile() { UserId = "6", FirstName = "Thor", LastName = "Odinson", CreatedAt = DateTime.Now, latBuyer = -6.312340425302839, longBuyer = 106.93424525069073}
+            };
+
+            foreach (var b in buyers)
+            {
+                context.BuyerProfiles.Add(b);
             }
 
             context.SaveChanges();
