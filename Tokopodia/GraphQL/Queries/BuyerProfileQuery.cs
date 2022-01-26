@@ -11,6 +11,7 @@ namespace Tokopodia.GraphQL.Queries
   public class BuyerProfileQuery
   {
 
+    // TODO: mbuat utk get buyer profile
     public string GetBuyerProfile()
     {
       return "Hello buyer profile!";
