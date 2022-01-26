@@ -10,5 +10,7 @@ namespace Tokopodia.Data.Users
     Task<IdentityUser> Registration(IdentityUser user);
     Task<LoginOutput> Authenticate(LoginInput user);
     Task<IdentityUser> UpdateRole(IdentityUser user, string role);
+
+    Task<IdentityUser> GetById(string UserId);
   }
 }

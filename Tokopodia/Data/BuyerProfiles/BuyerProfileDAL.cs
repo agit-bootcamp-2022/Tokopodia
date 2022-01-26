@@ -12,6 +12,8 @@ using Tokopodia.Helpers;
 using Tokopodia.Input;
 using Tokopodia.Models;
 using Tokopodia.Output;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tokopodia.Data.BuyerProfiles
 {
@@ -44,6 +46,19 @@ namespace Tokopodia.Data.BuyerProfiles
       var result = await _db.BuyerProfiles.AddAsync(profile);
       await _db.SaveChangesAsync();
       return result.Entity;
+    }
+
+    public async Task<BuyerProfile> Update(BuyerProfile profile)
+    {
+      var result = _db.BuyerProfiles.Update(profile);
+      await _db.SaveChangesAsync();
+      return result.Entity;
+    }
+
+    public async Task<BuyerProfile> GetByUserId(string userId)
+    {
+      var result = await _db.BuyerProfiles.Where(b => b.UserId == userId).Include(b => b.User).FirstOrDefaultAsync();
+      return result;
     }
   }
 }
