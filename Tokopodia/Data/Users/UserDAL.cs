@@ -105,5 +105,10 @@ namespace Tokopodia.Data.Users
       return result;
     }
 
+    public async Task<IdentityUser> GetById(string UserId)
+    {
+      var result = await _userManager.FindByIdAsync(UserId);
+      return result;
+    }
   }
 }

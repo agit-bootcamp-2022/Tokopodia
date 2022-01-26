@@ -10,5 +10,7 @@ namespace Tokopodia.Data.BuyerProfiles
   {
     Task<BuyerProfile> Insert(BuyerProfile profile);
     Task<BuyerProfile> GetProfileById(int profileId);
+    Task<BuyerProfile> GetByUserId(string userId);
+    Task<BuyerProfile> Update(BuyerProfile profile);
   }
 }
