@@ -16,10 +16,9 @@ using System.Threading.Tasks;
 using Tokopodia.Data;
 using Tokopodia.Helpers;
 using Tokopodia.Graphql;
-using Tokopodia.GraphQL.Querys;
+using Tokopodia.GraphQL.Queries;
 using Tokopodia.GraphQL;
 using Tokopodia.GraphQL.Mutations;
-using Tokopodia.GraphQL.Queries;
 using Tokopodia.Helper;
 using Tokopodia.Data.User;
 
@@ -76,6 +75,8 @@ namespace Tokopodia
       services.AddScoped<UserManager<IdentityUser>>();
       services.AddControllers();
 
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
           options.Password.RequiredLength = 8;
@@ -85,6 +86,7 @@ namespace Tokopodia
           options.Password.RequireDigit = true;
         })
         .AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
+
 
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
