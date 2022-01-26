@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Tokopodia.Data;
 using Tokopodia.Models;
 
-namespace Tokopodia.GraphQL.Querys
+namespace Tokopodia.GraphQL.Queries
 {
     [ExtendObjectType(Name = "Query")]
     [Obsolete]
