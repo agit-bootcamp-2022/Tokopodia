@@ -16,7 +16,7 @@ namespace Tokopodia.Models
     public int TransactionId { get; set; }
 
     // sesuaikan dengan cart id yang akan dibuat
-    public ICollection<Cart> Carts { get; set; }
+    public IEnumerable<Cart> Carts { get; set; }
 
     [Required]
     public string Address { get; set; }

@@ -20,6 +20,9 @@ using Tokopodia.Helper;
 using Tokopodia.Data.Users;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.SellerProfiles;
+using Tokopodia.Data.Carts;
+using Tokopodia.Data.Transactions;
+using Tokopodia.Data.Wallets;
 
 namespace Tokopodia
 {
@@ -63,6 +66,7 @@ namespace Tokopodia
                .AddTypeExtension<QueryCart>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
+               .AddTypeExtension<TransactionMutation>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
                .AddTypeExtension<ProductMutation>()
@@ -74,6 +78,9 @@ namespace Tokopodia
       services.AddScoped<IUser, UserDAL>();
       services.AddScoped<IBuyerProfile, BuyerProfileDAL>();
       services.AddScoped<ISellerProfile, SellerProfileDAL>();
+      services.AddScoped<ICart, CartDAL>();
+      services.AddScoped<ITransaction, TransactionDAL>();
+      services.AddScoped<IWallet, WalletDAL>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
