@@ -41,9 +41,13 @@ namespace Tokopodia.GraphQL.Mutations
       if (buyerResult == null)
         throw new UserNotFoundException();
 
-      var cart = context.Carts.Where(c => c.Id == id && c.BuyerId == buyerResult.Id).FirstOrDefault();
+      var cart = context.Carts.Where(c => c.Id == id).FirstOrDefault();
       if (cart != null)
       {
+        if (cart.BuyerId != buyerResult.Id)
+        {
+          return new CartStatusOutput($"Data in the cart does not belong to the buyerId:{buyerResult.Id}");
+        }
         if (cart.Status == "OnCart")
         {
           context.Carts.Remove(cart);
@@ -54,11 +58,7 @@ namespace Tokopodia.GraphQL.Mutations
         {
           return new CartStatusOutput("Data in the cart cannot be deleted");
         }
-      }
-      else
-      {
-        return new CartStatusOutput($"Data {cart.Id} not found");
-      }
+      }throw new CartNotFound();
     }
 
     public async Task<Cart> AddCartAsync(
