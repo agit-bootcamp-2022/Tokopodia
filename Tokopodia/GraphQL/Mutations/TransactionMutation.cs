@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.Carts;
 using Tokopodia.Data.Wallets;
+using Tokopodia.Data.Products;
 using Tokopodia.Helper;
 using Tokopodia.Models;
 
@@ -24,7 +25,10 @@ namespace Tokopodia.GraphQL.Mutations
     }
 
     [Authorize(Roles = new[] { "Buyer" })]
-    public async Task<string> AddTransaction([Service] IBuyerProfile _buyerProfile, [Service] ICart _cart, [Service] IWallet _wallet)
+    public async Task<string> AddTransaction([Service] IBuyerProfile _buyerProfile,
+                                             [Service] ICart _cart,
+                                             [Service] IWallet _wallet,
+                                             [Service] IProduct _product)
     {
       try
       {
@@ -48,13 +52,31 @@ namespace Tokopodia.GraphQL.Mutations
         // cek saldo dulu ke wallet service -> ambil dengan id user => login => get saldo
         var walletuser = _wallet.GetByUserId(profileResult.User.Id);
         // login ke wallet service
+        // get saldo for buyer
+        // check saldi dengan total billing, jika kurang return erro
+        // update stok product ke database
+        // foreach (var cart in carts)
+        // {
+        //   cart.Product.Stock = cart.Product.Stock - 
+        // }
+        // var product = context.Products.Where(o => o.Id == productId).FirstOrDefault();
+        // if (product != null)
+        // {
+        //   product.Name = input.Name;
+        //   product.Stock = input.Stock;
+        //   product.Price = input.Price;
+        //   product.Weight = input.Weight;
+
+        //   context.Products.Update(product);
+        //   await context.SaveChangesAsync();
+        // }
         // simpan semuanya di transaction
         var transactionInput = new Transaction
         {
           Address = profileResult.Address,
           Carts = carts,
           CreatedAt = DateTime.Now,
-          status = Status.Paid, //tambahin nanti
+          status = TransactionStatus.Paid, //tambahin nanti
           SumBillingSeller = 10, //tambahin nanti
           SumShippingCost = 10, //tambahin nanti
           Token = "test", //tambahin nanti

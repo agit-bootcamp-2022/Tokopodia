@@ -23,6 +23,7 @@ using Tokopodia.Data.SellerProfiles;
 using Tokopodia.Data.Carts;
 using Tokopodia.Data.Transactions;
 using Tokopodia.Data.Wallets;
+using Tokopodia.Data.Products;
 
 namespace Tokopodia
 {
@@ -82,6 +83,7 @@ namespace Tokopodia
       services.AddScoped<ICart, CartDAL>();
       services.AddScoped<ITransaction, TransactionDAL>();
       services.AddScoped<IWallet, WalletDAL>();
+      services.AddScoped<IProduct, ProductDAL>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

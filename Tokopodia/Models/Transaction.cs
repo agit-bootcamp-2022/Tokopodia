@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Tokopodia.Models
 {
-  public enum Status
+  public enum TransactionStatus
   {
     Paid,
     Completed
@@ -31,7 +31,7 @@ namespace Tokopodia.Models
     public double TotalBilling { get; set; }
 
     [Required]
-    public Status status { get; set; }
+    public TransactionStatus status { get; set; }
 
     [Required]
     public DateTime CreatedAt { get; set; }
