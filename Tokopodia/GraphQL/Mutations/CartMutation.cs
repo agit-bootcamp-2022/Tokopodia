@@ -12,6 +12,8 @@ using Tokopodia.Helper;
 using Tokopodia.Input;
 using Tokopodia.Models;
 using Tokopodia.Output;
+using Tokopodia.SyncDataService.Dtos;
+using Tokopodia.SyncDataService.Http;
 
 namespace Tokopodia.GraphQL.Mutations
 {
@@ -64,6 +66,7 @@ namespace Tokopodia.GraphQL.Mutations
         [Service] IUser user,
         [Service] IBuyerProfile buyerProfile,
         [Service] AppDbContext context,
+        [Service] IDianterExpressDataClient _diantarExpressClient,
         [Service] IHttpContextAccessor httpContextAccessor)
     {
       var userId = httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
@@ -98,39 +101,53 @@ namespace Tokopodia.GraphQL.Mutations
       //Validasi lat dan long seller
       if (seller.LatSeller == 0 || seller.LongSeller == 0)
       {
-        Console.WriteLine("Buyer has not input Lat and Long");
+        Console.WriteLine("Seller has not input Lat and Long");
 
       }
 
-      //Validasi lat dan long buyer
-      /*if (input.LatBuyer == 0 || input.LongBuyer == 0)
-      {
-          if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
-          {
-              Console.WriteLine("Buyer has not input Lat and Long");
-          }
-          input.LatBuyer = buyyer.latBuyer;
-          input.LongBuyer = buyyer.longBuyer;
+            //Validasi lat dan long buyer
+            if (input.LatBuyer == 0 || input.LongBuyer == 0)
+            {
+                if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
+                {
+                    Console.WriteLine("Buyer has not input Lat and Long");
+                }
+                input.LatBuyer = buyyer.latBuyer;
+                input.LongBuyer = buyyer.longBuyer;
 
-      }*/
+            }
 
-      var cart = new Cart
-      {
-        BuyerId = Convert.ToInt32(buyerResult.Id),
-        ProductId = input.ProductId,
-        SellerId = seller.Id,
-        Quantity = input.Quantity,
-        Weight = input.Quantity * product.Weight,
-        BillingSeller = product.Price * input.Quantity,
-        LatSeller = seller.LatSeller,
-        LongSeller = seller.LongSeller,
-        LatBuyer = input.LatBuyer,
-        LongBuyer = input.LongBuyer,
-        ShippingTypeId = input.ShippingTypeId,
-        ShippingCost = 123213,
-        Status = "OnCart",
-        Product = product
-      };
+            var send = new CheckFeeInput
+            {
+                senderLat = seller.LatSeller,
+                senderLong = seller.LongSeller,
+                receiverLat = input.LatBuyer,
+                receiverLong = input.LongBuyer,
+                weight = input.Quantity * product.Weight,
+                shipmentTypeId = input.ShippingTypeId
+            };
+
+            var msg = await _diantarExpressClient.CheckFee(send);
+            var fee = msg.data.fee;
+            var cart = new Cart
+              {
+                BuyerId = buyerResult.Id,
+                ProductId = input.ProductId,
+                SellerId = seller.Id,
+                Quantity = input.Quantity,
+                Weight = input.Quantity * product.Weight,
+                BillingSeller = product.Price * input.Quantity,
+                LatSeller = seller.LatSeller,
+                LongSeller = seller.LongSeller,
+                LatBuyer = input.LatBuyer,
+                LongBuyer = input.LongBuyer,
+                ShippingTypeId = input.ShippingTypeId,
+                ShippingCost = fee,
+                Status = "OnCart",
+                Product = product
+              };
+
+            
 
       var ret = context.Carts.Add(cart);
       await context.SaveChangesAsync();
