@@ -1,8 +1,8 @@
 ﻿namespace Tokopodia.Input
 {
-    public class AddCartInput
+    public class UpdateCartInput
     {
-        public int ProductId { get; set; }
+        public int CartId { get; set; }
         public int Quantity { get; set; }
         public double LatBuyer { get; set; }
         public double LongBuyer { get; set; }

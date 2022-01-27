@@ -1,4 +1,4 @@
-﻿namespace Tokopodia.Dto
+﻿namespace Tokopodia.Input
 {
     public record SellerPositionInput
     (
