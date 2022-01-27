@@ -1,6 +1,6 @@
 ﻿namespace Tokopodia.Output
 {
-    public record Status
+    public record CartStatusOutput
     (
         string Message
     );
