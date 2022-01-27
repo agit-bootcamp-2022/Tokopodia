@@ -257,8 +257,8 @@ namespace Tokopodia.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float>("BillingSeller")
-                        .HasColumnType("real");
+                    b.Property<double>("BillingSeller")
+                        .HasColumnType("float");
 
                     b.Property<int>("BuyerId")
                         .HasColumnType("int");
@@ -284,16 +284,24 @@ namespace Tokopodia.Migrations
                     b.Property<int>("SellerId")
                         .HasColumnType("int");
 
-                    b.Property<float>("ShippingCost")
-                        .HasColumnType("real");
+                    b.Property<double>("ShippingCost")
+                        .HasColumnType("float");
 
-                    b.Property<string>("ShippingType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ShippingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShippingTypeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("Weight")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Carts");
                 });
@@ -460,6 +468,17 @@ namespace Tokopodia.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Tokopodia.Models.Cart", b =>
+                {
+                    b.HasOne("Tokopodia.Models.Product", "Product")
+                        .WithMany("Cart")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Tokopodia.Models.SellerProfile", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
@@ -480,6 +499,11 @@ namespace Tokopodia.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Tokopodia.Models.Product", b =>
+                {
+                    b.Navigation("Cart");
                 });
 #pragma warning restore 612, 618
         }
