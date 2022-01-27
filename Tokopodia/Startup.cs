@@ -69,12 +69,14 @@ namespace Tokopodia
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
                .AddTypeExtension<TransactionMutation>()
+               .AddTypeExtension<WalletQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
                .AddTypeExtension<CartMutation>()
                .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
-               .AddTypeExtension<SellerProfileMutation>();
+               .AddTypeExtension<SellerProfileMutation>()
+               .AddTypeExtension<WalletMutation>();
 
       services.AddHttpContextAccessor();
       services.AddErrorFilter<GraphQLErrorFilter>();
@@ -109,7 +111,6 @@ namespace Tokopodia
       services
         .AddUangTrans()
         .ConfigureHttpClient(client => client.BaseAddress = new Uri(appSettings.UangTrans));
-      services.AddScoped<IUangTrans>();
 
       var key = Encoding.ASCII.GetBytes(appSettings.Secret);
       services.AddAuthentication(x =>

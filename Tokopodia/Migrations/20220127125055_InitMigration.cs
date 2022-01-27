@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tokopodia.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,30 +47,6 @@ namespace Tokopodia.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Carts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BuyerId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    SellerId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    BillingSeller = table.Column<float>(type: "real", nullable: false),
-                    LatSeller = table.Column<double>(type: "float", nullable: false),
-                    LongSeller = table.Column<double>(type: "float", nullable: false),
-                    LatBuyer = table.Column<double>(type: "float", nullable: false),
-                    LongBuyer = table.Column<double>(type: "float", nullable: false),
-                    ShippingType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ShippingCost = table.Column<float>(type: "real", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Carts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -88,6 +64,26 @@ namespace Tokopodia.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    TransactionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SumBillingSeller = table.Column<double>(type: "float", nullable: false),
+                    SumShippingCost = table.Column<double>(type: "float", nullable: false),
+                    TotalBilling = table.Column<double>(type: "float", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WalletTransactionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.TransactionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,6 +202,7 @@ namespace Tokopodia.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     latBuyer = table.Column<double>(type: "float", nullable: false),
                     longBuyer = table.Column<double>(type: "float", nullable: false)
                 },
@@ -266,6 +263,45 @@ namespace Tokopodia.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Carts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BuyerId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    SellerId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Weight = table.Column<double>(type: "float", nullable: false),
+                    BillingSeller = table.Column<double>(type: "float", nullable: false),
+                    LatSeller = table.Column<double>(type: "float", nullable: false),
+                    LongSeller = table.Column<double>(type: "float", nullable: false),
+                    LatBuyer = table.Column<double>(type: "float", nullable: false),
+                    LongBuyer = table.Column<double>(type: "float", nullable: false),
+                    ShippingId = table.Column<int>(type: "int", nullable: false),
+                    ShippingTypeId = table.Column<int>(type: "int", nullable: false),
+                    ShippingCost = table.Column<double>(type: "float", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TransactionId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Carts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Carts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Carts_Transactions_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "Transactions",
+                        principalColumn: "TransactionId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -311,6 +347,16 @@ namespace Tokopodia.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Carts_ProductId",
+                table: "Carts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carts_TransactionId",
+                table: "Carts",
+                column: "TransactionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SellerProfiles_UserId",
                 table: "SellerProfiles",
                 column: "UserId");
@@ -345,9 +391,6 @@ namespace Tokopodia.Migrations
                 name: "Carts");
 
             migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
                 name: "SellerProfiles");
 
             migrationBuilder.DropTable(
@@ -355,6 +398,12 @@ namespace Tokopodia.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

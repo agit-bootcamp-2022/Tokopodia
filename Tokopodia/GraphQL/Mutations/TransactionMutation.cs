@@ -30,7 +30,8 @@ namespace Tokopodia.GraphQL.Mutations
                                              [Service] ICart _cart,
                                              [Service] IWallet _wallet,
                                              [Service] IProduct _product,
-                                             [Service] IDianterExpressDataClient _diantarExpressClient)
+                                             [Service] IDianterExpressDataClient _diantarExpressClient,
+                                             [Service] IUangTrans _uangTrans)
     {
       try
       {
