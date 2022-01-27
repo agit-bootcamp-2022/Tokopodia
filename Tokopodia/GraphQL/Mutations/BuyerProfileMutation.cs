@@ -17,7 +17,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.Users;
-using Tokopodia.Dto;
 using Tokopodia.Helper;
 using Tokopodia.Input;
 using Tokopodia.Models;
@@ -59,7 +58,7 @@ namespace Tokopodia.GraphQL.Mutations
       }
     }
 
-    public async Task<LoginOutput> Authenticate(LoginInput input, [Service] IUser _user, [Service] IBuyerProfile _buyerProfile)
+    public async Task<LoginOutput> AuthenticateBuyer(LoginInput input, [Service] IUser _user, [Service] IBuyerProfile _buyerProfile)
     {
       try
       {

@@ -9,10 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Tokopodia.Data;
 using Tokopodia.Helpers;
 using Tokopodia.Graphql;
@@ -22,6 +19,7 @@ using Tokopodia.GraphQL.Mutations;
 using Tokopodia.Helper;
 using Tokopodia.Data.Users;
 using Tokopodia.Data.BuyerProfiles;
+using Tokopodia.Data.SellerProfiles;
 
 namespace Tokopodia
 {
@@ -61,13 +59,13 @@ namespace Tokopodia
         .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true)
            .AddQueryType(d => d.Name("Query"))
                .AddTypeExtension<Query>()
-               .AddTypeExtension<QueryProduct>()
+               .AddTypeExtension<ProductQuery>()
                .AddTypeExtension<QueryCart>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
-               .AddTypeExtension<MutationProduct>()
+               .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
                .AddTypeExtension<SellerProfileMutation>();
 
@@ -75,6 +73,7 @@ namespace Tokopodia
       services.AddErrorFilter<GraphQLErrorFilter>();
       services.AddScoped<IUser, UserDAL>();
       services.AddScoped<IBuyerProfile, BuyerProfileDAL>();
+      services.AddScoped<ISellerProfile, SellerProfileDAL>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
