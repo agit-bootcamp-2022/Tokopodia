@@ -20,6 +20,11 @@ using Tokopodia.Helper;
 using Tokopodia.Data.Users;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.SellerProfiles;
+using Tokopodia.Data.Carts;
+using Tokopodia.Data.Transactions;
+using Tokopodia.Data.Wallets;
+using Tokopodia.Data.Products;
+using Tokopodia.SyncDataService.Http;
 
 namespace Tokopodia
 {
@@ -63,18 +68,26 @@ namespace Tokopodia
                .AddTypeExtension<CartQuery>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
+               .AddTypeExtension<TransactionMutation>()
+               .AddTypeExtension<WalletQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
                .AddTypeExtension<CartMutation>()
                .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
-               .AddTypeExtension<SellerProfileMutation>();
+               .AddTypeExtension<SellerProfileMutation>()
+               .AddTypeExtension<WalletMutation>();
 
       services.AddHttpContextAccessor();
       services.AddErrorFilter<GraphQLErrorFilter>();
       services.AddScoped<IUser, UserDAL>();
       services.AddScoped<IBuyerProfile, BuyerProfileDAL>();
       services.AddScoped<ISellerProfile, SellerProfileDAL>();
+      services.AddScoped<ICart, CartDAL>();
+      services.AddScoped<ITransaction, TransactionDAL>();
+      services.AddScoped<IWallet, WalletDAL>();
+      services.AddScoped<IProduct, ProductDAL>();
+      services.AddScoped<IDianterExpressDataClient, HttpDianterExpressDataClient>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -94,8 +107,12 @@ namespace Tokopodia
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
       var appSettings = appSettingSection.Get<AppSettings>();
-      var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
+      services
+        .AddUangTrans()
+        .ConfigureHttpClient(client => client.BaseAddress = new Uri(appSettings.UangTrans));
+
+      var key = Encoding.ASCII.GetBytes(appSettings.Secret);
       services.AddAuthentication(x =>
       {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
