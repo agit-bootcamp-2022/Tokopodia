@@ -10,28 +10,28 @@ using Tokopodia.Models;
 
 namespace Tokopodia.GraphQL.Queries
 {
-    [ExtendObjectType(Name = "Query")]
-    [Obsolete]
-    public class CartQuery
+  [ExtendObjectType(Name = "Query")]
+  [Obsolete]
+  public class CartQuery
+  {
+    public IQueryable<Cart> GetAllCartsByBuyer(
+        [Service] AppDbContext context,
+        [Service] IHttpContextAccessor httpContextAccessor)
     {
-        public async Task<IQueryable<Cart>> GetAllCartsByBuyer(
-            [Service] AppDbContext context,
-            [Service] IHttpContextAccessor httpContextAccessor)
-        {
-            var buyerId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var carts = context.Carts.Where(c => c.BuyerId == Convert.ToInt32(buyerId));
+      var buyerId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+      var carts = context.Carts.Where(c => c.BuyerId == Convert.ToInt32(buyerId));
 
-            return carts; 
-        }
-
-        public async Task<IQueryable<Cart>> GetCartOnCartBuyer(
-            [Service] AppDbContext context,
-            [Service] IHttpContextAccessor httpContextAccessor)
-        {
-            var buyerId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var cart = context.Carts.Where(c => c.BuyerId == Convert.ToInt32(buyerId) && c.Status == "OnCart");
-
-            return cart;
-        }
+      return carts;
     }
+
+    public IQueryable<Cart> GetCartOnCartBuyer(
+        [Service] AppDbContext context,
+        [Service] IHttpContextAccessor httpContextAccessor)
+    {
+      var buyerId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+      var cart = context.Carts.Where(c => c.BuyerId == Convert.ToInt32(buyerId) && c.Status == "OnCart");
+
+      return cart;
+    }
+  }
 }

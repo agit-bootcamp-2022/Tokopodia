@@ -10,6 +10,7 @@ using Tokopodia.Data.Wallets;
 using Tokopodia.Data.Products;
 using Tokopodia.Helper;
 using Tokopodia.Models;
+using Tokopodia.SyncDataService.Http;
 
 namespace Tokopodia.GraphQL.Mutations
 {
@@ -28,7 +29,8 @@ namespace Tokopodia.GraphQL.Mutations
     public async Task<string> AddTransaction([Service] IBuyerProfile _buyerProfile,
                                              [Service] ICart _cart,
                                              [Service] IWallet _wallet,
-                                             [Service] IProduct _product)
+                                             [Service] IProduct _product,
+                                             [Service] IDianterExpressDataClient _diantarExpressClient)
     {
       try
       {
@@ -55,21 +57,16 @@ namespace Tokopodia.GraphQL.Mutations
         // get saldo for buyer
         // check saldi dengan total billing, jika kurang return erro
         // update stok product ke database
-        // foreach (var cart in carts)
-        // {
-        //   cart.Product.Stock = cart.Product.Stock - 
-        // }
-        // var product = context.Products.Where(o => o.Id == productId).FirstOrDefault();
-        // if (product != null)
-        // {
-        //   product.Name = input.Name;
-        //   product.Stock = input.Stock;
-        //   product.Price = input.Price;
-        //   product.Weight = input.Weight;
+        foreach (var cart in carts)
+        {
+          cart.Product.Stock = cart.Product.Stock - cart.Quantity;
+          if (cart.Product.Stock < 0)
+            throw new Exception("Stock is not ennough.");
+          cart.Status = "OnTransaction";
+          var updateResult = await _product.Update(cart.Product);
+        }
+        // request post shipping ke shipping service
 
-        //   context.Products.Update(product);
-        //   await context.SaveChangesAsync();
-        // }
         // simpan semuanya di transaction
         var transactionInput = new Transaction
         {

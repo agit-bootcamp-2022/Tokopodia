@@ -1,0 +1,7 @@
+mutation LoginUser($input: LoginUserInput) {
+  loginUser(input: $input) {
+    token
+    expired
+    message
+  }
+}

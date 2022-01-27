@@ -61,13 +61,14 @@ type Query {
   walletsAsync: [Wallet]
   geRolesAsync: [Roles]
   walletMutationAsync: [WalletMutation]
-  walletByCustomerIdAsync: [Wallet]
+  walletByCustomerIdAsync: [WalletOutput]
   profileByCustomerIdAsync: [ProfileOutput]
+  walletMutationIdAsync: [TableJoinResult]
 }
 
 type Mutation {
-  registerUser(input: RegisterInput): TransactionStatus
-  registerAdmin(input: RegisterInput): TransactionStatus
+  registerUser(input: RegisterInput): ProfileResult
+  registerAdmin(input: RegisterInput): ProfileResult
   addToRole(input: AddRoleToUserInput): AddRoleToUser
   loginUser(input: LoginUserInput): UserToken
   createRole(input: CreateRoleInput): TransactionStatus
@@ -76,6 +77,7 @@ type Mutation {
     input: WalletMutationCreateInput
   ): TransactionStatus
   topUp(input: WalletInput): WalletBalance
+  transferBalance(input: TransferBalanceInput): TransactionStatus
   updateProfile(input: ProfileInput): ProfileResult
   updateWallet(input: WalletInput): WalletBalance
   lockUser(input: LockUserInput): TransactionStatus
@@ -125,6 +127,13 @@ type WalletMutation {
   wallet: Wallet
 }
 
+type WalletOutput {
+  id: Int!
+  balance: Float!
+  createdDate: DateTime!
+  customerId: Int!
+}
+
 type ProfileOutput {
   id: Int!
   username: String
@@ -134,9 +143,14 @@ type ProfileOutput {
   createdDate: DateTime!
 }
 
-type TransactionStatus {
-  succeed: Boolean!
+type TableJoinResult {
+  walletMutation: WalletMutation
+  wallet: Wallet
+}
+
+type ProfileResult {
   message: String
+  data: ProfileOutput
 }
 
 input RegisterInput {
@@ -166,6 +180,11 @@ type UserToken {
 input LoginUserInput {
   username: String
   password: String
+}
+
+type TransactionStatus {
+  succeed: Boolean!
+  message: String
 }
 
 input CreateRoleInput {
@@ -199,9 +218,10 @@ input WalletInput {
   balance: Float!
 }
 
-type ProfileResult {
-  message: String
-  data: ProfileOutput
+input TransferBalanceInput {
+  amount: Float!
+  customerDebitId: Int!
+  customerCreditId: Int!
 }
 
 input ProfileInput {

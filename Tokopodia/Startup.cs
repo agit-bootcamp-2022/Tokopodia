@@ -24,6 +24,7 @@ using Tokopodia.Data.Carts;
 using Tokopodia.Data.Transactions;
 using Tokopodia.Data.Wallets;
 using Tokopodia.Data.Products;
+using Tokopodia.SyncDataService.Http;
 
 namespace Tokopodia
 {
@@ -84,6 +85,7 @@ namespace Tokopodia
       services.AddScoped<ITransaction, TransactionDAL>();
       services.AddScoped<IWallet, WalletDAL>();
       services.AddScoped<IProduct, ProductDAL>();
+      services.AddScoped<IDianterExpressDataClient, HttpDianterExpressDataClient>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -103,8 +105,13 @@ namespace Tokopodia
       var appSettingSection = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettingSection);
       var appSettings = appSettingSection.Get<AppSettings>();
-      var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
+      services
+        .AddUangTrans()
+        .ConfigureHttpClient(client => client.BaseAddress = new Uri(appSettings.UangTrans));
+      services.AddScoped<IUangTrans>();
+
+      var key = Encoding.ASCII.GetBytes(appSettings.Secret);
       services.AddAuthentication(x =>
       {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

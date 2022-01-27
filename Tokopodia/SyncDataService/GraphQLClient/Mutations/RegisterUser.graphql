@@ -1,0 +1,13 @@
+mutation RegisterUser($input: RegisterInput) {
+  registerUser(input: $input) {
+    message
+    data {
+      id
+      username
+      firstName
+      lastName
+      email
+      createdDate
+    }
+  }
+}
