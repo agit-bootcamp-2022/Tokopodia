@@ -1,19 +1,30 @@
-﻿using System;
+﻿using HotChocolate;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Tokopodia.Data;
 using Tokopodia.Models;
 
 namespace Tokopodia.Output
 {
     public class ProductSellerOutput
     {
-        //var seller = context.Sellers.Where(o => o.SellerId == sellerId).FirstOrDefault();
 
-        //SellerName = seller.shopname;
+        private readonly AppDbContext _context;
 
-        public ProductSellerOutput(Task<List<Product>> product)
+        public ProductSellerOutput([Service] AppDbContext context)
         {
-            Product = product;
+            _context = context;
+        }
+
+        public ProductSellerOutput(Task<List<Product>> products, int sellerId)
+        {
+            var seller = _context.SellerProfiles.Where(o => o.Id == sellerId).FirstOrDefault();
+
+            SellerName = seller.ShopName;
+
+            Product = products;
         }
 
         public string SellerName { get; set; }
