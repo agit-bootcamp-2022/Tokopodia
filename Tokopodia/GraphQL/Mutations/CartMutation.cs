@@ -6,6 +6,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Tokopodia.Data;
+using Tokopodia.Data.BuyerProfiles;
+using Tokopodia.Data.Users;
+using Tokopodia.Helper;
 using Tokopodia.Input;
 using Tokopodia.Models;
 using Tokopodia.Output;
@@ -18,13 +21,25 @@ namespace Tokopodia.GraphQL.Mutations
     {
         public async Task<CartStatusOutput> DeleteCartByIdAsync(
             int id,
+            [Service] IUser user,
+            [Service] IBuyerProfile buyerProfile,
             [Service] AppDbContext context,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
-            var buyerId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //var buyyer = context.Carts.Where(c => c.BuyerId == Convert.ToInt32(buyerId)).FirstOrDefault();
+            var userId = httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
+            if (userId == null)
+            {
+                throw new Exception("Unauthorized.");
+            }
 
-            var cart = context.Carts.Where(c => c.Id == id && c.BuyerId == Convert.ToInt32(buyerId)).FirstOrDefault();
+            var userResult = await user.GetById(userId);
+            if (userResult == null)
+                throw new UserNotFoundException();
+            var buyerResult = await buyerProfile.GetByUserId(userResult.Id);
+            if (buyerResult == null)
+                throw new UserNotFoundException();
+
+            var cart = context.Carts.Where(c => c.Id == id && c.BuyerId == buyerResult.Id).FirstOrDefault();
             if (cart != null)
             {
                 if (cart.Status == "OnCart")
@@ -46,11 +61,25 @@ namespace Tokopodia.GraphQL.Mutations
 
         public async Task<Cart> AddCartAsync(
             AddCartInput input,
+            [Service] IUser user,
+            [Service] IBuyerProfile buyerProfile,
             [Service] AppDbContext context,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
-            var buyerId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var buyyer = context.BuyerProfiles.Where(c => c.Id == Convert.ToInt32(buyerId)).FirstOrDefault();
+            var userId = httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
+            if (userId == null)
+            {
+                throw new Exception("Unauthorized.");
+            }
+
+            var userResult = await user.GetById(userId);
+            if (userResult == null)
+                throw new UserNotFoundException();
+            var buyerResult = await buyerProfile.GetByUserId(userResult.Id);
+            if (buyerResult == null)
+                throw new UserNotFoundException();
+
+            var buyyer = context.BuyerProfiles.Where(c => c.Id == buyerResult.Id).FirstOrDefault();
 
             var product = context.Products.Where(p => p.Id == input.ProductId).FirstOrDefault();
             var seller = context.SellerProfiles.Where(s => s.Id == product.SellerId).FirstOrDefault();
@@ -60,18 +89,21 @@ namespace Tokopodia.GraphQL.Mutations
                 Console.WriteLine("Buyyer Not Found");
             }
 
-            if (input.Quantity < 0 || input.Quantity <= product.Stock)
+            //Validasi input stock
+            if (input.Quantity < 0 || input.Quantity >= product.Stock)
             {
                 Console.WriteLine("Quantity cannot be negative");
             }
 
+            //Validasi lat dan long seller
             if (seller.LatSeller == 0 || seller.LongSeller == 0)
             {
                 Console.WriteLine("Buyer has not input Lat and Long");
 
             }
 
-            if (input.LatBuyer == null || input.LongBuyer == null)
+            //Validasi lat dan long buyer
+            /*if (input.LatBuyer == 0 || input.LongBuyer == 0)
             {
                 if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
                 {
@@ -80,11 +112,11 @@ namespace Tokopodia.GraphQL.Mutations
                 input.LatBuyer = buyyer.latBuyer;
                 input.LongBuyer = buyyer.longBuyer;
 
-            }
+            }*/
 
             var cart = new Cart
             {
-                BuyerId = Convert.ToInt32(buyerId),
+                BuyerId = Convert.ToInt32(buyerResult.Id),
                 ProductId = input.ProductId,
                 SellerId = seller.Id,
                 Quantity = input.Quantity,
@@ -95,7 +127,9 @@ namespace Tokopodia.GraphQL.Mutations
                 LatBuyer = input.LatBuyer,
                 LongBuyer = input.LongBuyer,
                 ShippingTypeId = input.ShippingTypeId,
-                ShippingCost = 123213
+                ShippingCost = 123213,
+                Status = "OnCart",
+                Product = product
             };
 
             var ret = context.Carts.Add(cart);
@@ -106,11 +140,25 @@ namespace Tokopodia.GraphQL.Mutations
 
         public async Task<Cart> UpdateCartAsync(
             UpdateCartInput input,
+            [Service] IUser user,
+            [Service] IBuyerProfile buyerProfile,
             [Service] AppDbContext context,
             [Service] IHttpContextAccessor httpContextAccessor)
         {
-            var buyerId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var buyyer = context.BuyerProfiles.Where(c => c.Id == Convert.ToInt32(buyerId)).FirstOrDefault();
+            var userId = httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
+            if (userId == null)
+            {
+                throw new Exception("Unauthorized.");
+            }
+
+            var userResult = await user.GetById(userId);
+            if (userResult == null)
+                throw new UserNotFoundException();
+            var buyerResult = await buyerProfile.GetByUserId(userResult.Id);
+            if (buyerResult == null)
+                throw new UserNotFoundException();
+
+            var buyyer = context.BuyerProfiles.Where(c => c.Id == buyerResult.Id).FirstOrDefault();
 
             var cartId = context.Carts.Where(c => c.Id == input.CartId).FirstOrDefault();
 
@@ -121,12 +169,14 @@ namespace Tokopodia.GraphQL.Mutations
                 Console.WriteLine("Buyyer Not Found");
             }
 
+            //Validasi input stock
             if (input.Quantity < 0 || input.Quantity <= product.Stock)
             {
                 Console.WriteLine("Quantity cannot be negative");
             }
 
-            if (input.LatBuyer == null || input.LongBuyer == null)
+            //Validasi lat dan long buyer
+            /*if (input.LatBuyer == null || input.LongBuyer == null)
             {
                 if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
                 {
@@ -135,7 +185,7 @@ namespace Tokopodia.GraphQL.Mutations
                 input.LatBuyer = buyyer.latBuyer;
                 input.LongBuyer = buyyer.longBuyer;
 
-            }
+            }*/
 
             var cart = new Cart
             {
@@ -146,7 +196,7 @@ namespace Tokopodia.GraphQL.Mutations
                 ShippingTypeId = input.ShippingTypeId,
             };
 
-            var ret = context.Carts.Add(cart);
+            var ret = context.Carts.Update(cart);
             await context.SaveChangesAsync();
 
             return ret.Entity;
