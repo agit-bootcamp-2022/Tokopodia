@@ -44,40 +44,46 @@ namespace Tokopodia.GraphQL.Queries
 
             var product = context.Products.Where(o => o.SellerId == profileResult.Id).ToListAsync();
 
-            return new ProductSellerOutput(product);
+            return new ProductSellerOutput(product, profileResult.Id);
         }
 
-        public ProductBuyerOutput GetProductForBuyer(
+        public async Task<ProductBuyerOutput> GetProductForBuyer(
         ProductBuyerInput input,
-        [Service] AppDbContext context)
+        Product product,
+        [Service] AppDbContext context,
+        [Service] ISellerProfile sellerProfile)
         {
 
             var products = context.Products.Where(o => o.Name.Contains(input.Name));
+
+            var profileResult = await sellerProfile.GetByUserId(Convert.ToString(product.Id));
+            if (profileResult == null)
+                throw new UserNotFoundException();
 
             if (input.MaxPrice != null)
             {
                 if (input.MinPrice != null)
                 {
                     var productsminmax = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price < input.MaxPrice && o.Price > input.MinPrice);
-                    return new ProductBuyerOutput(productsminmax);
+                    return new ProductBuyerOutput(productsminmax, profileResult.Id);
                 }
                 var productsmax = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price < input.MaxPrice);
-                return new ProductBuyerOutput(productsmax);
+                return new ProductBuyerOutput(productsmax, profileResult.Id);
             }
 
             if (input.MinPrice != null)
             {
                 var productsmin = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price > input.MinPrice);
-                return new ProductBuyerOutput(productsmin);
+                return new ProductBuyerOutput(productsmin, profileResult.Id);
             }
 
             if (input.Category != null)
             {
                 var productscat = context.Products.Where(o => o.Name.Contains(input.Name) && o.Category.Contains(input.Category));
-                return new ProductBuyerOutput(productscat);
+                return new ProductBuyerOutput(productscat, profileResult.Id);
             }
 
-            return new ProductBuyerOutput(products);
+            return new ProductBuyerOutput(products, profileResult.Id);
         }
     }
 }
