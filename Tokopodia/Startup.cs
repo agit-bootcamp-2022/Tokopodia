@@ -47,11 +47,13 @@ namespace Tokopodia
                .AddTypeExtension<QueryProduct>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
+               .AddTypeExtension<WalletQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
                .AddTypeExtension<MutationProduct>()
                .AddTypeExtension<BuyerProfileMutation>()
-               .AddTypeExtension<SellerProfileMutation>();
+               .AddTypeExtension<SellerProfileMutation>()
+               .AddTypeExtension<WalletMutation>();
 
             services.AddHttpContextAccessor();
 
