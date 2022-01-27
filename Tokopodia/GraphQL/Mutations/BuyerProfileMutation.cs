@@ -63,7 +63,7 @@ namespace Tokopodia.GraphQL.Mutations
     {
       try
       {
-        var result = await _user.Authenticate(input);
+        var result = await _user.Authenticate(input, "Buyer");
         return result;
       }
       catch (System.Exception ex)

@@ -8,7 +8,7 @@ namespace Tokopodia.Data.Users
   public interface IUser
   {
     Task<IdentityUser> Registration(IdentityUser user);
-    Task<LoginOutput> Authenticate(LoginInput user);
+    Task<LoginOutput> Authenticate(LoginInput user, string userType);
     Task<IdentityUser> UpdateRole(IdentityUser user, string role);
 
     Task<IdentityUser> GetById(string UserId);

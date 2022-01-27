@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -32,13 +33,12 @@ namespace Tokopodia.Models
     [Required]
     public Status status { get; set; }
 
+    [Required]
+    public DateTime CreatedAt { get; set; }
+
     public string Token { get; set; }
 
-    // menunggu dari shipping service
-    // public int ShippingId { get; set; }
-
-    // menunggu dari wallet service
-    // public int WalletTransactionId { get; set; }
+    public int WalletTransactionId { get; set; } //fk dari wallet service
 
   }
 }

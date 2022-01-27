@@ -36,9 +36,10 @@ namespace Tokopodia.Data.BuyerProfiles
       _db = db;
     }
 
-    public Task<BuyerProfile> GetProfileById(int profileId)
+    public async Task<BuyerProfile> GetProfileById(int profileId)
     {
-      throw new NotImplementedException();
+      var result = await _db.BuyerProfiles.FindAsync(profileId);
+      return result;
     }
 
     public async Task<BuyerProfile> Insert(BuyerProfile profile)
