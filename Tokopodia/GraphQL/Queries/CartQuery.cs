@@ -12,7 +12,7 @@ namespace Tokopodia.GraphQL.Queries
 {
     [ExtendObjectType(Name = "Query")]
     [Obsolete]
-    public class QueryCart
+    public class CartQuery
     {
         public async Task<IQueryable<Cart>> GetAllCartsByBuyer(
             [Service] AppDbContext context,
