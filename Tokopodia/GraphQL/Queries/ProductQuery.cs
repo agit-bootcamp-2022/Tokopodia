@@ -9,6 +9,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Tokopodia.Data;
+using Tokopodia.Data.SellerProfiles;
+using Tokopodia.Data.Users;
+using Tokopodia.Helper;
 using Tokopodia.Input;
 using Tokopodia.Models;
 using Tokopodia.Output;
@@ -17,16 +20,29 @@ namespace Tokopodia.GraphQL.Queries
 {
     [ExtendObjectType(Name = "Query")]
     [Obsolete]
-    public class QueryProduct
+    public class ProductQuery
     {
         [Authorize(Roles = new[] { "Seller" })]
-        public ProductSellerOutput GetProductForSeller(
+        public async Task<ProductSellerOutput> GetProductForSeller(
         [Service] AppDbContext context,
-        [Service] IHttpContextAccessor httpContextAccessor)
+        [Service] IHttpContextAccessor httpContextAccessor,
+        [Service] IUser user, 
+        [Service] ISellerProfile sellerProfile)
         {
-            var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userId = httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
+            if (userId == null)
+            {
+                throw new Exception("Unauthorized.");
+            }
 
-            var product = context.Products.Where(o => o.SellerId == sellerId).ToListAsync();
+            var userResult = await user.GetById(userId);
+            if (userResult == null)
+                throw new UserNotFoundException();
+            var profileResult = await sellerProfile.GetByUserId(userResult.Id);
+            if (profileResult == null)
+                throw new UserNotFoundException();
+
+            var product = context.Products.Where(o => o.SellerId == profileResult.Id).ToListAsync();
 
             return new ProductSellerOutput(product);
         }

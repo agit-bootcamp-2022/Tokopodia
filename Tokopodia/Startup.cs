@@ -9,60 +9,77 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Tokopodia.Data;
 using Tokopodia.Helpers;
 using Tokopodia.Graphql;
 using Tokopodia.GraphQL.Queries;
 using Tokopodia.GraphQL;
 using Tokopodia.GraphQL.Mutations;
-using Tokopodia.GraphQL.Queries;
+using Tokopodia.Helper;
+using Tokopodia.Data.Users;
+using Tokopodia.Data.BuyerProfiles;
+using Tokopodia.Data.SellerProfiles;
 
 namespace Tokopodia
 {
   public class Startup
   {
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment env)
     {
 
       Configuration = configuration;
+      _env = env;
     }
+    private readonly IWebHostEnvironment _env;
     public IConfiguration Configuration { get; }
 
-        [Obsolete]
-        public void ConfigureServices(IServiceCollection services)
+    [Obsolete]
+    public void ConfigureServices(IServiceCollection services)
     {
-      services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("LocalDatabase")));
+      if (_env.IsProduction())
+      {
+        Console.WriteLine("--> using Azure Db");
+        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
+          Configuration.GetConnectionString("Connection")
+        ));
+      }
+      else
+      {
+        Console.WriteLine("--> Using LocalDB");
+        services.AddDbContext<AppDbContext>(options =>
+       options.UseSqlServer(Configuration.GetConnectionString("LocalDatabase")));
+      }
 
       services.AddTransient<DbInitializer>();
 
       services
         .AddGraphQLServer()
         .AddAuthorization()
+        .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true)
            .AddQueryType(d => d.Name("Query"))
                .AddTypeExtension<Query>()
-               .AddTypeExtension<QueryProduct>()
+               .AddTypeExtension<ProductQuery>()
                .AddTypeExtension<QueryCart>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
-               .AddTypeExtension<MutationProduct>()
                .AddTypeExtension<MutationCart>()
+               .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
                .AddTypeExtension<SellerProfileMutation>();
 
-            services.AddHttpContextAccessor();
-
-
+      services.AddHttpContextAccessor();
+      services.AddErrorFilter<GraphQLErrorFilter>();
+      services.AddScoped<IUser, UserDAL>();
+      services.AddScoped<IBuyerProfile, BuyerProfileDAL>();
+      services.AddScoped<ISellerProfile, SellerProfileDAL>();
       services.AddControllers();
-          
+
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-          
+      services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
           options.Password.RequiredLength = 8;
@@ -70,7 +87,8 @@ namespace Tokopodia
           options.Password.RequireUppercase = true;
           options.Password.RequireNonAlphanumeric = true;
           options.Password.RequireDigit = true;
-        }).AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
+        })
+        .AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
 
 
       var appSettingSection = Configuration.GetSection("AppSettings");
