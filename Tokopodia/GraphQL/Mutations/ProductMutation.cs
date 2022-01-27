@@ -41,13 +41,11 @@ namespace Tokopodia.GraphQL.Mutations
                 throw new UserNotFoundException();
 
             if (profileResult.LatSeller == 0 || profileResult.LongSeller == 0)
-            {
-                Console.WriteLine("Seller belum input lokasi");
-            }
+                throw new PositionNotInserted();
+
             if (input.Stock < 0 || input.Price < 0 || input.Weight < 0)
-            {
-                Console.WriteLine("Value cannot be negative");
-            }
+                throw new ValueNegative();
+
             var product = new Product
             {
                 SellerId = profileResult.Id,
@@ -91,9 +89,7 @@ namespace Tokopodia.GraphQL.Mutations
             var seller = context.Products.Where(o => o.SellerId == profileResult.Id).FirstOrDefault();
 
             if (input.Stock < 0 || input.Price < 0 || input.Weight < 0)
-            {
-                Console.WriteLine("Value cannot be negative");
-            }
+                throw new ValueNegative();
 
             var product = context.Products.Where(o => o.Id == productId).FirstOrDefault();
             if (product != null)
@@ -148,7 +144,7 @@ namespace Tokopodia.GraphQL.Mutations
                 context.Products.Remove(product);
                 await context.SaveChangesAsync();
             }
-            else { Console.WriteLine("Product not found"); }
+            else { throw new ProductNotFound(); }
 
             return await Task.FromResult(product);
         }
