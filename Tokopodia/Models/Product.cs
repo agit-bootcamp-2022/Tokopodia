@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Tokopodia.Models
 {
@@ -13,5 +14,6 @@ namespace Tokopodia.Models
         public double Price { get; set; }
         public double Weight { get; set; }
         public DateTime Created { get; set; }
+        public IEnumerable<Cart> Cart { get; set; }
     }
 }
