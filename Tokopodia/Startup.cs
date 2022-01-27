@@ -69,6 +69,7 @@ namespace Tokopodia
                .AddTypeExtension<TransactionMutation>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
+               .AddTypeExtension<MutationCart>()
                .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
                .AddTypeExtension<SellerProfileMutation>();

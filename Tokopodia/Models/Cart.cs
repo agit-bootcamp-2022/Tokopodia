@@ -14,8 +14,11 @@ namespace Tokopodia.Models
         public double LongSeller { get; set; }
         public double LatBuyer { get; set; }
         public double LongBuyer { get; set; }
+        public int ShippingId { get; set; }
         public string ShippingType { get; set; }
         public float ShippingCost { get; set; }
         public string Status { get; set; }
+
+        public Product Product { get; set; }
     }
 }
