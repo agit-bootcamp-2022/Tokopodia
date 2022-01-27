@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Tokopodia.Data;
-using Tokopodia.Dto;
 using Tokopodia.Helpers;
+using Tokopodia.Output;
 
 namespace Tokopodia.GraphQL.Queries
 {
@@ -27,19 +27,19 @@ namespace Tokopodia.GraphQL.Queries
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public SellerDto ShowProfile()
+        public SellerOutput ShowProfile()
         {
             var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
             if (userName == null)
             {
                 throw new Exception("Silahkan Login Terlebih Dahulu");
             }
-            return (SellerDto)_context.SellerProfiles.Select(seller => new SellerDto()
+            return (SellerOutput)_context.SellerProfiles.Select(seller => new SellerOutput()
             {
-                UserId = seller.UserId,
+                Id = Convert.ToInt32(seller.UserId),
                 Username = seller.Username,
-                Address = seller.Address,
-                ShopName = seller.ShopName,
+                //Address = seller.Address,
+                //ShopName = seller.ShopName,
                 CreatedAt = seller.CreatedAt
             }).Where(seller => seller.Username == userName);
         }

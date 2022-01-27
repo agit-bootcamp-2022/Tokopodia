@@ -19,6 +19,7 @@ using Tokopodia.GraphQL.Mutations;
 using Tokopodia.Helper;
 using Tokopodia.Data.Users;
 using Tokopodia.Data.BuyerProfiles;
+using Tokopodia.Data.SellerProfiles;
 
 namespace Tokopodia
 {
@@ -72,6 +73,7 @@ namespace Tokopodia
       services.AddErrorFilter<GraphQLErrorFilter>();
       services.AddScoped<IUser, UserDAL>();
       services.AddScoped<IBuyerProfile, BuyerProfileDAL>();
+      services.AddScoped<ISellerProfile, SellerProfileDAL>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

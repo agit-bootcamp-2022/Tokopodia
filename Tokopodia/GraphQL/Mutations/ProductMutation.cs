@@ -95,7 +95,7 @@ namespace Tokopodia.GraphQL.Mutations
             var sellerId = Convert.ToInt32(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var seller = context.Products.Where(o => o.SellerId == sellerId).FirstOrDefault();
 
-            var cart = context.Carts.Where(o => o.ProductId == id).FirstOrDefault();
+            var cart = context.Carts.Where(o => o.ProductId == id && o.Status == "OnCart").FirstOrDefault();
 
             var product = context.Products.Where(o => o.Id == id).FirstOrDefault();
             if (product != null)
