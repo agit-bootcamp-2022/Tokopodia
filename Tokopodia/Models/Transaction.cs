@@ -11,11 +11,9 @@ namespace Tokopodia.Models
   }
   public class Transaction
   {
-    // TODO: cek comment dibawah ini.
     [Key]
     public int TransactionId { get; set; }
 
-    // sesuaikan dengan cart id yang akan dibuat
     public IEnumerable<Cart> Carts { get; set; }
 
     [Required]

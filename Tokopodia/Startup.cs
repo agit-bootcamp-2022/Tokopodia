@@ -25,7 +25,6 @@ using Tokopodia.Data.Carts;
 using Tokopodia.Data.Transactions;
 using Tokopodia.Data.Wallets;
 using Tokopodia.Data.Products;
-using Tokopodia.SyncDataService.Http;
 using Tokopodia.SyncDataService.GraphQLClients;
 using GraphQL.Client.Http;
 using GraphQL.Client.Abstractions;
