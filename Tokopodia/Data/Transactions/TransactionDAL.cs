@@ -30,5 +30,11 @@ namespace Tokopodia.Data.Transactions
       return result.Entity;
     }
 
+    public async Task<Transaction> GetById(int transactionId)
+    {
+      var result = await _db.Transactions.Include(t => t.Carts).Where(t => t.TransactionId == transactionId).FirstOrDefaultAsync();
+      return result;
+    }
+
   }
 }

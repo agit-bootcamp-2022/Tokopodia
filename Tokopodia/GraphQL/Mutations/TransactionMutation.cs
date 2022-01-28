@@ -155,12 +155,35 @@ namespace Tokopodia.GraphQL.Mutations
         transaction.Carts = cartsObj;
         var transactionUpdate = await _transaction.Update(transaction);
         var transOutput = _mapper.Map<TransactionOutput>(transactionUpdate);
+        transOutput.CartsOutput = _mapper.Map<IEnumerable<CartOutput>>(transactionUpdate.Carts);
         return transOutput;
       }
       catch (System.Exception ex)
       {
         throw new DataFailed(ex.Message);
       }
+    }
+
+    [Authorize(Roles = new[] { "Courier" })]
+    public async Task<Message> UpdateTransaction(UpdateInput input, [Service] ITransaction _transaction)
+    {
+      string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+      string[] tokenWords = token.Split(' ');
+      var transactionResult = await _transaction.GetById(input.transactionId);
+      if (tokenWords[1] != transactionResult.Token)
+        return new Message { message = "fail" };
+      transactionResult.status = TransactionStatus.Completed;
+      var updateTransaction = await _transaction.Update(transactionResult);
+      return new Message { message = "success" };
+    }
+
+    [Authorize(Roles = new[] { "Courier" })]
+    public async Task<TransactionOutput> GetTransactionById(int transactionId, [Service] ITransaction _transaction)
+    {
+      var transactionResult = await _transaction.GetById(transactionId);
+      var transOutput = _mapper.Map<TransactionOutput>(transactionResult);
+      transOutput.CartsOutput = _mapper.Map<IEnumerable<CartOutput>>(transactionResult.Carts);
+      return transOutput;
     }
   }
 }
