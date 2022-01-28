@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using Tokopodia.Helpers;
 using Tokopodia.Input;
 using Tokopodia.Output;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tokopodia.Data.Users
 {
@@ -20,16 +22,19 @@ namespace Tokopodia.Data.Users
 
     private RoleManager<IdentityRole> _roleManager;
     private AppSettings _appSettings;
+    private readonly AppDbContext _db;
 
     public UserDAL([Service] UserManager<IdentityUser> userManager,
                    [Service] RoleManager<IdentityRole> roleManager,
-                   [Service] IOptions<AppSettings> appSettings)
+                   [Service] IOptions<AppSettings> appSettings,
+                   [Service] AppDbContext db)
     {
       _userManager = userManager;
       _roleManager = roleManager;
       _appSettings = appSettings.Value;
+      _db = db;
     }
-    public async Task<LoginOutput> Authenticate(LoginInput user)
+    public async Task<LoginOutput> Authenticate(LoginInput user, string userType)
     {
       var account = await _userManager.FindByNameAsync(user.Username);
       if (account == null)
@@ -42,9 +47,27 @@ namespace Tokopodia.Data.Users
       {
         throw new Exception("Invalid username or password.");
       }
+      int profileId = 0;
+      if (userType == "Buyer")
+      {
+        var userProfile = await _db.BuyerProfiles.Where(bp => bp.UserId == account.Id).SingleOrDefaultAsync();
+        if (userProfile == null)
+          throw new Exception("Invalid username or password.");
+        profileId = userProfile.Id;
+      }
+      else if (userType == "Seller")
+      {
+        var userProfile = await _db.SellerProfiles.Where(bp => bp.UserId == account.Id).SingleOrDefaultAsync();
+        if (userProfile == null)
+          throw new Exception("Invalid username or password.");
+        profileId = userProfile.Id;
+      }
+
+
       List<Claim> claims = new List<Claim>();
       claims.Add(new Claim(ClaimTypes.Name, account.UserName));
       claims.Add(new Claim("UserId", account.Id.ToString()));
+      claims.Add(new Claim("ProfileId", profileId.ToString()));
       var roles = await GetRolesFromUser(account.UserName);
       foreach (var role in roles)
       {

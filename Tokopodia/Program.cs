@@ -29,6 +29,7 @@ namespace Tokopodia
                 {
                     var context = services.GetRequiredService<AppDbContext>();
                     DbInitializer.Initializer(context);
+                    Console.WriteLine("berhasil menambahkan data");
                 }
                 catch (Exception ex)
                 {

@@ -222,6 +222,10 @@ namespace Tokopodia.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -260,7 +264,7 @@ namespace Tokopodia.Migrations
                     b.Property<double>("BillingSeller")
                         .HasColumnType("float");
 
-                    b.Property<int>("BuyerId")
+                    b.Property<int?>("BuyerId")
                         .HasColumnType("int");
 
                     b.Property<double>("LatBuyer")
@@ -281,7 +285,7 @@ namespace Tokopodia.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SellerId")
+                    b.Property<int?>("SellerId")
                         .HasColumnType("int");
 
                     b.Property<double>("ShippingCost")
@@ -293,15 +297,27 @@ namespace Tokopodia.Migrations
                     b.Property<int>("ShippingTypeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ShippingTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Weight")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BuyerId");
+
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("SellerId");
+
+                    b.HasIndex("TransactionId");
 
                     b.ToTable("Carts");
                 });
@@ -386,6 +402,43 @@ namespace Tokopodia.Migrations
                     b.ToTable("SellerProfiles");
                 });
 
+            modelBuilder.Entity("Tokopodia.Models.Transaction", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("SumBillingSeller")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SumShippingCost")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("TotalBilling")
+                        .HasColumnType("float");
+
+                    b.Property<int>("WalletTransactionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
+                    b.HasKey("TransactionId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("Tokopodia.Models.Wallet", b =>
                 {
                     b.Property<int>("WalletId")
@@ -395,6 +448,9 @@ namespace Tokopodia.Migrations
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UangTransId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -475,13 +531,33 @@ namespace Tokopodia.Migrations
 
             modelBuilder.Entity("Tokopodia.Models.Cart", b =>
                 {
+                    b.HasOne("Tokopodia.Models.BuyerProfile", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId");
+
                     b.HasOne("Tokopodia.Models.Product", "Product")
                         .WithMany("Cart")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Tokopodia.Models.SellerProfile", "Seller")
+                        .WithMany()
+                        .HasForeignKey("SellerId");
+
+                    b.HasOne("Tokopodia.Models.Transaction", "Transaction")
+                        .WithMany("Carts")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Buyer");
+
                     b.Navigation("Product");
+
+                    b.Navigation("Seller");
+
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("Tokopodia.Models.SellerProfile", b =>
@@ -509,6 +585,11 @@ namespace Tokopodia.Migrations
             modelBuilder.Entity("Tokopodia.Models.Product", b =>
                 {
                     b.Navigation("Cart");
+                });
+
+            modelBuilder.Entity("Tokopodia.Models.Transaction", b =>
+                {
+                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }
