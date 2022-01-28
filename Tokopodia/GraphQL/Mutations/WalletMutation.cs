@@ -7,6 +7,7 @@ using Tokopodia.Data;
 using Tokopodia.Input;
 using Tokopodia.Models;
 using Tokopodia.Output;
+using Tokopodia.SyncDataService.Http;
 
 namespace Tokopodia.GraphQL.Mutations
 {
@@ -15,14 +16,17 @@ namespace Tokopodia.GraphQL.Mutations
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppDbContext _db;
+        private readonly IUangTransDataClient _uangtrans;
 
         public WalletMutation([Service] IMapper mapper,
                               [Service] IHttpContextAccessor httpContextAccessor,
-                              [Service] AppDbContext db)
+                              [Service] AppDbContext db,
+                              [Service] IUangTransDataClient uangTransDataClient)
         {
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _db = db;
+            _uangtrans = uangTransDataClient;
         }
 
         public async Task<WalletOutput> AddWalletAsync(WalletInput input)
@@ -37,6 +41,17 @@ namespace Tokopodia.GraphQL.Mutations
 
             _db.Wallets.Add(wallet);
             await _db.SaveChangesAsync();
+
+            var sendwallet = new WalletForHttpInput
+            {
+                Username = input.Username,
+                Email = input.Username,
+                Password = input.Password,
+                FirstName = "Abc",
+                LastName = "Cde"
+            };
+
+            await _uangtrans.SendWalletToUangTrans(sendwallet);
 
             return await Task.FromResult(new WalletOutput
             {
