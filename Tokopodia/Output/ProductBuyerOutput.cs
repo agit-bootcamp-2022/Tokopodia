@@ -11,12 +11,12 @@ namespace Tokopodia.Output
     public class ProductBuyerOutput
     {
 
-        public ProductBuyerOutput(Task<List<Product>> products)
+        public ProductBuyerOutput(IQueryable<Product> products)
         {
             Products = products;
         }
 
-        public Task<List<Product>> Products { get; }
+        public IQueryable<Product> Products { get; }
     }
 }
 

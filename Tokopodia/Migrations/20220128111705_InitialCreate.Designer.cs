@@ -10,8 +10,8 @@ using Tokopodia.Data;
 namespace Tokopodia.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220128095356_UpdateProduct")]
-    partial class UpdateProduct
+    [Migration("20220128111705_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

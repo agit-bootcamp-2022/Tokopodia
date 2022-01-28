@@ -52,28 +52,28 @@ namespace Tokopodia.GraphQL.Queries
         [Service] AppDbContext context)
         {
 
-            var products = context.Products.Where(o => o.Name.Contains(input.Name)).ToListAsync();
+            var products = context.Products.Where(o => o.Name.Contains(input.Name));
 
             if (input.MaxPrice != null)
             {
                 if (input.MinPrice != null)
                 {
-                    var productsminmax = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price < input.MaxPrice && o.Price > input.MinPrice).ToListAsync();
+                    var productsminmax = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price < input.MaxPrice && o.Price > input.MinPrice);
                     return new ProductBuyerOutput(productsminmax);
                 }
-                var productsmax = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price < input.MaxPrice).ToListAsync();
+                var productsmax = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price < input.MaxPrice);
                 return new ProductBuyerOutput(productsmax);
             }
 
             if (input.MinPrice != null)
             {
-                var productsmin = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price > input.MinPrice).ToListAsync();
+                var productsmin = context.Products.Where(o => o.Name.Contains(input.Name) && o.Price > input.MinPrice);
                 return new ProductBuyerOutput(productsmin);
             }
 
             if (input.Category != null)
             {
-                var productscat = context.Products.Where(o => o.Name.Contains(input.Name) && o.Category.Contains(input.Category)).ToListAsync();
+                var productscat = context.Products.Where(o => o.Name.Contains(input.Name) && o.Category.Contains(input.Category));
                 return new ProductBuyerOutput(productscat);
             }
 
