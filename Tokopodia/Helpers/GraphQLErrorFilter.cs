@@ -29,6 +29,8 @@ namespace Tokopodia.Helper
         return error.WithMessage($"Cart data could not be found");
       if (error.Exception is ShippingNotFound crc)
         return error.WithMessage($"Shipping Type not found");
+      if (error.Exception is NotAccess cre)
+        return error.WithMessage($"Data in the cart does not belong to the buyer");
 
       return error;
     }
@@ -58,4 +60,5 @@ namespace Tokopodia.Helper
   //Cart
   public class CartNotFound : Exception { }
   public class ShippingNotFound : Exception { }
+  public class NotAccess : Exception { }
 }
