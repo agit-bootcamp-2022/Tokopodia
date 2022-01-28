@@ -20,6 +20,7 @@ using Tokopodia.Helper;
 using Tokopodia.Data.Users;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.SellerProfiles;
+using Tokopodia.SyncDataService.Http;
 using Tokopodia.Data.Carts;
 using Tokopodia.Data.Transactions;
 using Tokopodia.Data.Wallets;
@@ -96,6 +97,9 @@ namespace Tokopodia
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+      services.AddHttpClient<IUangTransDataClient, HttpUangTransDataClient>();
+
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
