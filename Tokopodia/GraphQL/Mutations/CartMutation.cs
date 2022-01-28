@@ -105,6 +105,9 @@ namespace Tokopodia.GraphQL.Mutations
 
       }
 
+      //Validasi Input Jasa Kirim
+
+
             //Validasi lat dan long buyer
             if (input.LatBuyer == 0 || input.LongBuyer == 0)
             {
@@ -144,7 +147,9 @@ namespace Tokopodia.GraphQL.Mutations
                 ShippingTypeId = input.ShippingTypeId,
                 ShippingCost = fee,
                 Status = "OnCart",
-                Product = product
+                Product = product,
+                Buyer = buyyer,
+                Seller = seller
               };
 
             

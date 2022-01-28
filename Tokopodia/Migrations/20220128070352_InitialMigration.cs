@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tokopodia.Migrations
 {
-    public partial class InitMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -282,12 +282,18 @@ namespace Tokopodia.Migrations
                     ShippingId = table.Column<int>(type: "int", nullable: false),
                     ShippingTypeId = table.Column<int>(type: "int", nullable: false),
                     ShippingCost = table.Column<double>(type: "float", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TransactionId = table.Column<int>(type: "int", nullable: true)
+                    TransactionId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Carts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Carts_BuyerProfiles_BuyerId",
+                        column: x => x.BuyerId,
+                        principalTable: "BuyerProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Carts_Products_ProductId",
                         column: x => x.ProductId,
@@ -295,11 +301,17 @@ namespace Tokopodia.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Carts_SellerProfiles_SellerId",
+                        column: x => x.SellerId,
+                        principalTable: "SellerProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Carts_Transactions_TransactionId",
                         column: x => x.TransactionId,
                         principalTable: "Transactions",
                         principalColumn: "TransactionId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -347,9 +359,19 @@ namespace Tokopodia.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Carts_BuyerId",
+                table: "Carts",
+                column: "BuyerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Carts_ProductId",
                 table: "Carts",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carts_SellerId",
+                table: "Carts",
+                column: "SellerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Carts_TransactionId",
@@ -385,13 +407,7 @@ namespace Tokopodia.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BuyerProfiles");
-
-            migrationBuilder.DropTable(
                 name: "Carts");
-
-            migrationBuilder.DropTable(
-                name: "SellerProfiles");
 
             migrationBuilder.DropTable(
                 name: "Wallets");
@@ -400,7 +416,13 @@ namespace Tokopodia.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "BuyerProfiles");
+
+            migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "SellerProfiles");
 
             migrationBuilder.DropTable(
                 name: "Transactions");
