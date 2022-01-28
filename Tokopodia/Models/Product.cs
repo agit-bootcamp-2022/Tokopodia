@@ -1,19 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tokopodia.Models
 {
-  public partial class Product
-  {
-    public int Id { get; set; }
-    public int SellerId { get; set; }
-    public string Name { get; set; }
-    public string Category { get; set; }
-    public string Description { get; set; }
-    public int Stock { get; set; }
-    public double Price { get; set; }
-    public double Weight { get; set; }
-    public DateTime Created { get; set; }
-    public IEnumerable<Cart> Cart { get; set; }
-  }
+    public class Product
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        public int SellerId { get; set; }
+        [Required]
+        public string ShopName { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public string Description { get; set; }
+        [Required]
+        public int Stock { get; set; }
+        [Required]
+        public double Price { get; set; }
+        [Required]
+        public double Weight { get; set; }
+        [Required]
+        public DateTime Created { get; set; }
+        public IEnumerable<Cart> Cart { get; set; }
+    }
 }
