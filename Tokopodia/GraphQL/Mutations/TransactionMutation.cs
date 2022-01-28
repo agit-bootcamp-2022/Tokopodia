@@ -53,7 +53,7 @@ namespace Tokopodia.GraphQL.Mutations
         if (profileResult == null)
           throw new Exception("Unauthorized.");
         // cek semu cart list yang statusnya OnCart
-        var carts = await _cart.GetAllByStatusOnCart();
+        var carts = await _cart.GetAllByStatusOnCartAndBuyerId(profileResult.Id);
         // hitung SumBillingSeller
         // hitung SumShippingCost
         var sumBillingSeller = 0.0;

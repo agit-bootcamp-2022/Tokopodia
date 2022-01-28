@@ -15,9 +15,9 @@ namespace Tokopodia.Data.Carts
     {
       _db = db;
     }
-    public async Task<IEnumerable<Cart>> GetAllByStatusOnCart()
+    public async Task<IEnumerable<Cart>> GetAllByStatusOnCartAndBuyerId(int buyerId)
     {
-      var result = await _db.Carts.Include(c => c.Product).Include(c => c.Buyer).Include(c => c.Seller).Where(c => c.Status == "OnCart").ToListAsync();
+      var result = await _db.Carts.Include(c => c.Product).Include(c => c.Buyer).Include(c => c.Seller).Where(c => c.Status == "OnCart" && c.BuyerId == buyerId).ToListAsync();
       return result;
     }
 
