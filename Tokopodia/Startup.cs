@@ -25,6 +25,10 @@ using Tokopodia.Data.Transactions;
 using Tokopodia.Data.Wallets;
 using Tokopodia.Data.Products;
 using Tokopodia.SyncDataService.Http;
+using Tokopodia.SyncDataService.GraphQLClients;
+using GraphQL.Client.Http;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Serializer.Newtonsoft;
 
 namespace Tokopodia
 {
@@ -88,6 +92,7 @@ namespace Tokopodia
       services.AddScoped<IWallet, WalletDAL>();
       services.AddScoped<IProduct, ProductDAL>();
       services.AddScoped<IDianterExpressDataClient, HttpDianterExpressDataClient>();
+      services.AddScoped<OwnerConsumer>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -111,7 +116,7 @@ namespace Tokopodia
       services
         .AddUangTrans()
         .ConfigureHttpClient(client => client.BaseAddress = new Uri(appSettings.UangTrans));
-
+      services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(appSettings.UangTrans, new NewtonsoftJsonSerializer()));
       var key = Encoding.ASCII.GetBytes(appSettings.Secret);
       services.AddAuthentication(x =>
       {

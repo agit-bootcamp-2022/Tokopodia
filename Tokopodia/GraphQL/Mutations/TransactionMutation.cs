@@ -8,9 +8,14 @@ using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.Carts;
 using Tokopodia.Data.Wallets;
 using Tokopodia.Data.Products;
+using Tokopodia.Data.Users;
+using Tokopodia.Data.Transactions;
 using Tokopodia.Helper;
 using Tokopodia.Models;
 using Tokopodia.SyncDataService.Http;
+using Tokopodia.SyncDataService.GraphQLClients;
+using Tokopodia.SyncDataService.Dtos;
+using System.Collections.Generic;
 
 namespace Tokopodia.GraphQL.Mutations
 {
@@ -31,10 +36,14 @@ namespace Tokopodia.GraphQL.Mutations
                                              [Service] IWallet _wallet,
                                              [Service] IProduct _product,
                                              [Service] IDianterExpressDataClient _diantarExpressClient,
-                                             [Service] IUangTrans _uangTrans)
+                                             [Service] IUangTrans _uangTrans,
+                                             [Service] OwnerConsumer _consume,
+                                             [Service] IUser _user,
+                                             [Service] ITransaction _transaction)
     {
       try
       {
+
         var profileId = Int32.Parse(_httpContextAccessor.HttpContext.User.FindFirst("ProfileId").Value);
         var profileResult = await _buyerProfile.GetProfileById(profileId);
         if (profileResult == null)
@@ -53,10 +62,18 @@ namespace Tokopodia.GraphQL.Mutations
         // TotalBilling
         var totalBilling = sumBillingSeller + sumShippingCost;
         // cek saldo dulu ke wallet service -> ambil dengan id user => login => get saldo
-        var walletuser = _wallet.GetByUserId(profileResult.User.Id);
+        var walletuser = await _wallet.GetByUserId(profileResult.User.Id);
         // login ke wallet service
+
+        var loginResult = await _uangTrans.LoginUser.ExecuteAsync(new LoginUserInput { Username = walletuser.Username, Password = walletuser.Password });
+        // var loginResult = await _uangTrans.LoginUser.ExecuteAsync(new LoginUserInput { Username = "test", Password = "Kosongkan@Saja1" });
+        Console.WriteLine("token: " + loginResult.Data.LoginUser.Token);
         // get saldo for buyer
+        var saldo = await _consume.GetSaldo(loginResult.Data.LoginUser.Token);
+        Console.WriteLine("balance: " + saldo.balance);
         // check saldi dengan total billing, jika kurang return erro
+        if (totalBilling > saldo.balance)
+          throw new Exception("Saldo wallet is not enought.");
         // update stok product ke database
         foreach (var cart in carts)
         {
@@ -65,23 +82,56 @@ namespace Tokopodia.GraphQL.Mutations
             throw new Exception("Stock is not ennough.");
           cart.Status = "OnTransaction";
           var updateResult = await _product.Update(cart.Product);
+          cart.Product = updateResult;
         }
-        // request post shipping ke shipping service
-
+        IList<SellerCreateInput> sellers = new List<SellerCreateInput>();
+        foreach (var cart in carts)
+        {
+          sellers.Add(new SellerCreateInput { amountSeller = (float)cart.BillingSeller, sellerId = cart.SellerId });
+        }
+        //create transaction
+        var tranInput = new TransactionCreate
+        {
+          amountBuyer = (float)totalBilling,
+          amountCourier = (float)sumShippingCost,
+          buyerId = walletuser.UangTransId,
+          sellers = sellers
+        };
+        var walletTransaction = await _consume.CreateTransaction(tranInput, loginResult.Data.LoginUser.Token);
+        var courier = await _user.Authenticate(new Input.LoginInput { Username = "courier1", Password = "Courier1!" }, "Courier");
         // simpan semuanya di transaction
         var transactionInput = new Transaction
         {
           Address = profileResult.Address,
           Carts = carts,
           CreatedAt = DateTime.Now,
-          status = TransactionStatus.Paid, //tambahin nanti
-          SumBillingSeller = 10, //tambahin nanti
-          SumShippingCost = 10, //tambahin nanti
-          Token = "test", //tambahin nanti
-          TotalBilling = 20, //tamhain nanti
-          WalletTransactionId = 1 //tambahin nanti
+          status = TransactionStatus.Paid,
+          SumBillingSeller = sumBillingSeller,
+          SumShippingCost = sumShippingCost,
+          Token = courier.Token,
+          TotalBilling = totalBilling,
+          WalletTransactionId = walletTransaction.transactionId
         };
 
+        var transaction = await _transaction.Insert(transactionInput);
+        // create shipping ke anter express dengan for each
+        foreach (var cart in carts)
+        {
+          var shipmentCreate = new ShipmentInput
+          {
+            receiverContact = cart.Buyer.Address,
+            receiverLat = cart.LatBuyer,
+            receiverLong = cart.LongBuyer,
+            receiverName = $"{cart.Buyer.FirstName} {cart.Buyer.LastName}",
+            senderContact = cart.Seller.Address,
+            senderLat = cart.LatSeller,
+            senderLong = cart.LongSeller,
+            senderName = cart.Seller.ShopName,
+            shipmentTypeId = cart.ShippingTypeId,
+            // totalWeight=cart.
+          };
+        }
+        // UploadType cart utk masukin transaction id dan shipping id
         return "test";
 
       }

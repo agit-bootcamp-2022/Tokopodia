@@ -11,6 +11,9 @@ namespace Tokopodia.Models
     [Required]
     public string UserId { get; set; } //fk identity user
     [Required]
+    public int UangTransId { get; set; } //usernama for login wallet service
+
+    [Required]
     public string Username { get; set; } //usernama for login wallet service
 
     public string Password { get; set; } //pass utk login ke wallet service
