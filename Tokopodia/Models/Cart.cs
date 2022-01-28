@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tokopodia.Models
 {
     public class Cart
     {
+        [Key]
         public int Id { get; set; }
         public int BuyerId { get; set; }
         public int ProductId { get; set; }
@@ -24,5 +26,6 @@ namespace Tokopodia.Models
         public Product Product { get; set; }
         public BuyerProfile Buyer { get; set; }
         public SellerProfile Seller { get; set; }
+        public Transaction Transaction { get; set; }
     }
 }
