@@ -264,7 +264,7 @@ namespace Tokopodia.Migrations
                     b.Property<double>("BillingSeller")
                         .HasColumnType("float");
 
-                    b.Property<int>("BuyerId")
+                    b.Property<int?>("BuyerId")
                         .HasColumnType("int");
 
                     b.Property<double>("LatBuyer")
@@ -285,7 +285,7 @@ namespace Tokopodia.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SellerId")
+                    b.Property<int?>("SellerId")
                         .HasColumnType("int");
 
                     b.Property<double>("ShippingCost")
@@ -441,6 +441,9 @@ namespace Tokopodia.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UangTransId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -522,9 +525,7 @@ namespace Tokopodia.Migrations
                 {
                     b.HasOne("Tokopodia.Models.BuyerProfile", "Buyer")
                         .WithMany()
-                        .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BuyerId");
 
                     b.HasOne("Tokopodia.Models.Product", "Product")
                         .WithMany("Cart")
@@ -534,9 +535,7 @@ namespace Tokopodia.Migrations
 
                     b.HasOne("Tokopodia.Models.SellerProfile", "Seller")
                         .WithMany()
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SellerId");
 
                     b.HasOne("Tokopodia.Models.Transaction", "Transaction")
                         .WithMany("Carts")

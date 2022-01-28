@@ -10,8 +10,8 @@ using Tokopodia.Data;
 namespace Tokopodia.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220128070352_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220128081657_UpdateMigration")]
+    partial class UpdateMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -266,7 +266,7 @@ namespace Tokopodia.Migrations
                     b.Property<double>("BillingSeller")
                         .HasColumnType("float");
 
-                    b.Property<int>("BuyerId")
+                    b.Property<int?>("BuyerId")
                         .HasColumnType("int");
 
                     b.Property<double>("LatBuyer")
@@ -287,7 +287,7 @@ namespace Tokopodia.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SellerId")
+                    b.Property<int?>("SellerId")
                         .HasColumnType("int");
 
                     b.Property<double>("ShippingCost")
@@ -443,6 +443,9 @@ namespace Tokopodia.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UangTransId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -524,9 +527,7 @@ namespace Tokopodia.Migrations
                 {
                     b.HasOne("Tokopodia.Models.BuyerProfile", "Buyer")
                         .WithMany()
-                        .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BuyerId");
 
                     b.HasOne("Tokopodia.Models.Product", "Product")
                         .WithMany("Cart")
@@ -536,9 +537,7 @@ namespace Tokopodia.Migrations
 
                     b.HasOne("Tokopodia.Models.SellerProfile", "Seller")
                         .WithMany()
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SellerId");
 
                     b.HasOne("Tokopodia.Models.Transaction", "Transaction")
                         .WithMany("Carts")

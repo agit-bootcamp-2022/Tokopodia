@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tokopodia.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class UpdateMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -249,6 +249,7 @@ namespace Tokopodia.Migrations
                     WalletId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UangTransId = table.Column<int>(type: "int", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -269,9 +270,9 @@ namespace Tokopodia.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BuyerId = table.Column<int>(type: "int", nullable: false),
+                    BuyerId = table.Column<int>(type: "int", nullable: true),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    SellerId = table.Column<int>(type: "int", nullable: false),
+                    SellerId = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<double>(type: "float", nullable: false),
                     BillingSeller = table.Column<double>(type: "float", nullable: false),
@@ -293,7 +294,7 @@ namespace Tokopodia.Migrations
                         column: x => x.BuyerId,
                         principalTable: "BuyerProfiles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Carts_Products_ProductId",
                         column: x => x.ProductId,
@@ -305,7 +306,7 @@ namespace Tokopodia.Migrations
                         column: x => x.SellerId,
                         principalTable: "SellerProfiles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Carts_Transactions_TransactionId",
                         column: x => x.TransactionId,

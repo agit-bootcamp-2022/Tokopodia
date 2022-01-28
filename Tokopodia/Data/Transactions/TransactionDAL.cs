@@ -23,5 +23,12 @@ namespace Tokopodia.Data.Transactions
       return result.Entity;
     }
 
+    public async Task<Transaction> Update(Transaction input)
+    {
+      var result = _db.Transactions.Update(input);
+      await _db.SaveChangesAsync();
+      return result.Entity;
+    }
+
   }
 }

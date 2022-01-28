@@ -55,7 +55,7 @@ namespace Tokopodia.Data.Users
           throw new Exception("Invalid username or password.");
         profileId = userProfile.Id;
       }
-      else
+      else if (userType == "Seller")
       {
         var userProfile = await _db.SellerProfiles.Where(bp => bp.UserId == account.Id).SingleOrDefaultAsync();
         if (userProfile == null)
