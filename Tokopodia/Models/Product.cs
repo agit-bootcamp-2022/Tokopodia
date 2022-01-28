@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Tokopodia.Models
 {
-    public partial class Product
+    public class Product
     {
         [Key]
         public int Id { get; set; }
