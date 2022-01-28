@@ -6,5 +6,6 @@ namespace Tokopodia.SyncDataService.Http
   public interface IDianterExpressDataClient
   {
     Task<ShipmentOutput> CreateShipment(ShipmentInput input);
+    Task<CheckFeeOutput> CheckFee(CheckFeeInput input);
   }
 }

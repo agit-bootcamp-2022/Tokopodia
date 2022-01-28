@@ -25,6 +25,9 @@ namespace Tokopodia.Helper
       if (error.Exception is ProductNotFound pnf)
         return error.WithMessage($"Product Tidak Ditemukan");
 
+      if (error.Exception is CartNotFound crt)
+        return error.WithMessage($"Cart data could not be found");
+
       return error;
     }
 
@@ -49,4 +52,7 @@ namespace Tokopodia.Helper
   public class PositionNotInserted : Exception { }
   public class ValueNegative : Exception { }
   public class ProductNotFound : Exception { }
+
+  //Cart
+  public class CartNotFound : Exception { }
 }
