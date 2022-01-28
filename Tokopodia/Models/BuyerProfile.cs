@@ -20,6 +20,8 @@ namespace Tokopodia.Models
 
     [Required]
     public DateTime CreatedAt { get; set; }
+    [Required]
+    public string Address { get; set; }
 
     public double latBuyer { get; set; }
     public double longBuyer { get; set; }
