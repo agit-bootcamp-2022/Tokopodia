@@ -16,5 +16,6 @@ namespace Tokopodia.Data
     public DbSet<SellerProfile> SellerProfiles { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+
   }
 }

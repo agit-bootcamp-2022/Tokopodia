@@ -92,7 +92,7 @@ namespace Tokopodia.GraphQL.Mutations
         IList<SellerCreateInput> sellers = new List<SellerCreateInput>();
         foreach (var cart in carts)
         {
-          sellers.Add(new SellerCreateInput { amountSeller = (float)cart.BillingSeller, sellerId = cart.SellerId });
+          sellers.Add(new SellerCreateInput { amountSeller = (float)cart.BillingSeller, sellerId = (int)cart.SellerId });
         }
         //create transaction
         var tranInput = new TransactionCreate
