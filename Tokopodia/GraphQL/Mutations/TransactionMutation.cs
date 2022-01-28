@@ -15,7 +15,9 @@ using Tokopodia.Models;
 using Tokopodia.SyncDataService.Http;
 using Tokopodia.SyncDataService.GraphQLClients;
 using Tokopodia.SyncDataService.Dtos;
+using Tokopodia.Output;
 using System.Collections.Generic;
+using AutoMapper;
 
 namespace Tokopodia.GraphQL.Mutations
 {
@@ -24,14 +26,16 @@ namespace Tokopodia.GraphQL.Mutations
   public class TransactionMutation
   {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
 
-    public TransactionMutation([Service] IHttpContextAccessor httpContextAccessor)
+    public TransactionMutation([Service] IHttpContextAccessor httpContextAccessor, [Service] IMapper mapper)
     {
       _httpContextAccessor = httpContextAccessor;
+      _mapper = mapper;
     }
 
     [Authorize(Roles = new[] { "Buyer" })]
-    public async Task<string> AddTransaction([Service] IBuyerProfile _buyerProfile,
+    public async Task<TransactionOutput> AddTransaction([Service] IBuyerProfile _buyerProfile,
                                              [Service] ICart _cart,
                                              [Service] IWallet _wallet,
                                              [Service] IProduct _product,
@@ -83,6 +87,7 @@ namespace Tokopodia.GraphQL.Mutations
           cart.Status = "OnTransaction";
           var updateResult = await _product.Update(cart.Product);
           cart.Product = updateResult;
+          var cartUpdate = await _cart.Update(cart);
         }
         IList<SellerCreateInput> sellers = new List<SellerCreateInput>();
         foreach (var cart in carts)
@@ -112,9 +117,9 @@ namespace Tokopodia.GraphQL.Mutations
           TotalBilling = totalBilling,
           WalletTransactionId = walletTransaction.transactionId
         };
-
         var transaction = await _transaction.Insert(transactionInput);
         // create shipping ke anter express dengan for each
+        IList<Cart> cartsObj = new List<Cart>();
         foreach (var cart in carts)
         {
           var shipmentCreate = new ShipmentInput
@@ -128,18 +133,26 @@ namespace Tokopodia.GraphQL.Mutations
             senderLong = cart.LongSeller,
             senderName = cart.Seller.ShopName,
             shipmentTypeId = cart.ShippingTypeId,
-            // totalWeight=cart.
+            totalWeight = cart.Weight,
+            transactionId = transaction.TransactionId,
+            token = courier.Token
           };
+          var shippingResult = await _diantarExpressClient.CreateShipment(shipmentCreate);
+          cart.TransactionId = transaction.TransactionId;
+          cart.ShippingId = shippingResult.data.shipmentId;
+          var cartUpdate = await _cart.Update(cart);
+          cartsObj.Add(cartUpdate);
         }
+        transaction.Carts = cartsObj;
+        var transactionUpdate = await _transaction.Update(transaction);
+        var transOutput = _mapper.Map<TransactionOutput>(transactionUpdate);
         // UploadType cart utk masukin transaction id dan shipping id
-        return "test";
-
+        return transOutput;
       }
       catch (System.Exception ex)
       {
         throw new DataFailed(ex.Message);
       }
-
     }
   }
 }
