@@ -18,8 +18,11 @@ namespace Tokopodia.Models
         public int ShippingId { get; set; }
         public int ShippingTypeId { get; set; }
         public double ShippingCost { get; set; }
+        public int TransactionId { get; set; }
         public string Status { get; set; }
 
         public Product Product { get; set; }
+        public BuyerProfile Buyer { get; set; }
+        public SellerProfile Seller { get; set; }
     }
 }
