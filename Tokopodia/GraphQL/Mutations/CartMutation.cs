@@ -106,6 +106,10 @@ namespace Tokopodia.GraphQL.Mutations
       }
 
       //Validasi Input Jasa Kirim
+      if (!(input.ShippingTypeId == 1 || input.ShippingTypeId == 2 || input.ShippingTypeId == 3))
+      {
+        throw new ShippingNotFound();
+      }
 
 
             //Validasi lat dan long buyer

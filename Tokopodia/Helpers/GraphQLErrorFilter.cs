@@ -27,6 +27,8 @@ namespace Tokopodia.Helper
 
       if (error.Exception is CartNotFound crt)
         return error.WithMessage($"Cart data could not be found");
+      if (error.Exception is ShippingNotFound crc)
+        return error.WithMessage($"Shipping Type not found");
 
       return error;
     }
@@ -55,4 +57,5 @@ namespace Tokopodia.Helper
 
   //Cart
   public class CartNotFound : Exception { }
+  public class ShippingNotFound : Exception { }
 }
