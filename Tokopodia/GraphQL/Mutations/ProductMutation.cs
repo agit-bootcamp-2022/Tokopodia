@@ -49,6 +49,7 @@ namespace Tokopodia.GraphQL.Mutations
             var product = new Product
             {
                 SellerId = profileResult.Id,
+                ShopName = profileResult.ShopName,
                 Name = input.Name,
                 Category = input.Category,
                 Description = input.Description,

@@ -10,24 +10,13 @@ namespace Tokopodia.Output
 {
     public class ProductBuyerOutput
     {
-        private readonly AppDbContext _context;
 
-        public ProductBuyerOutput([Service] AppDbContext context)
+        public ProductBuyerOutput(Task<List<Product>> products)
         {
-            _context = context;
-        }
-
-        public ProductBuyerOutput(IQueryable<Product> products, int sellerId)
-        {
-            var seller = _context.SellerProfiles.Where(o => o.Id == sellerId).FirstOrDefault();
-
-            SellerName = seller.ShopName;
-
             Products = products;
         }
 
-        public string SellerName { get; set; }
-        public IQueryable<Product> Products { get; }
+        public Task<List<Product>> Products { get; }
     }
 }
 
