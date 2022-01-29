@@ -40,7 +40,7 @@ namespace Tokopodia.GraphQL.Queries
                                                             [Service] IWallet _wallet,
                                                             [Service] OwnerConsumer _consume)
         {
-
+            
             var userRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value;
 
             if (userRole == "Seller")
