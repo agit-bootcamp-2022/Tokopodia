@@ -3,21 +3,21 @@ using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
+using HotChocolate.Types;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Tokopodia.Data;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.SellerProfiles;
-using Tokopodia.Data.Users;
 using Tokopodia.Data.Wallets;
-using Tokopodia.Models;
 using Tokopodia.Output;
 using Tokopodia.SyncDataService.GraphQLClients;
-using Tokopodia.SyncDataService.Http;
 
 namespace Tokopodia.GraphQL.Queries
 {
+
+    [ExtendObjectType(Name = "Query")]
+    [Obsolete]
     public class WalletQuery
     {
         private readonly IMapper _mapper;
@@ -40,19 +40,17 @@ namespace Tokopodia.GraphQL.Queries
                                                             [Service] IWallet _wallet,
                                                             [Service] OwnerConsumer _consume)
         {
-            var buyerId = Int32.Parse(_httpContextAccessor.HttpContext.User.FindFirst("ProfileId").Value);
-            var buyerProfileResult = await _buyer.GetProfileById(buyerId);
-
-            var sellerId = Int32.Parse(_httpContextAccessor.HttpContext.User.FindFirst("ProfileId").Value);
-            var sellerProfileResult = await _seller.GetProfileById(sellerId);
-
-            if (buyerProfileResult == null || sellerProfileResult == null)
-                throw new Exception("Unauthorized.");
-
-            // cek saldo dulu ke wallet service -> ambil dengan id user => login => get saldo
+            
             var userRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value;
+
             if (userRole == "Seller")
             {
+                var sellerId = Int32.Parse(_httpContextAccessor.HttpContext.User.FindFirst("ProfileId").Value);
+                var sellerProfileResult = await _seller.GetProfileById(sellerId);
+
+                if (sellerProfileResult == null)
+                throw new Exception("Unauthorized.");
+
                 var walletuser = await _wallet.GetByUserId(sellerProfileResult.User.Id);
                 if (walletuser == null)
                     throw new Exception("Wallet user not found.");
@@ -77,6 +75,12 @@ namespace Tokopodia.GraphQL.Queries
             }
             else if (userRole == "Buyer")
             {
+                var buyerId = Int32.Parse(_httpContextAccessor.HttpContext.User.FindFirst("ProfileId").Value);
+                var buyerProfileResult = await _buyer.GetProfileById(buyerId);
+
+                if (buyerProfileResult == null)
+                throw new Exception("Unauthorized.");
+
                 var walletuser = await _wallet.GetByUserId(buyerProfileResult.User.Id);
                 if (walletuser == null)
                     throw new Exception("Wallet user not found.");
