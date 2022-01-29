@@ -85,7 +85,6 @@ namespace Tokopodia.GraphQL.Mutations
         if (totalBilling > saldo.balance)
           throw new Exception("Saldo wallet is not enought.");
         // update stok product ke database
-        // TODO: jangan lupa di uncomment
         foreach (var cart in carts)
         {
           cart.Product.Stock = cart.Product.Stock - cart.Quantity;
