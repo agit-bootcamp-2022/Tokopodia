@@ -2,7 +2,7 @@
 {
     public class BalanceOutput
     {
-        public int Id { get; set; }
+        public string UangTransId { get; set; }
         public double Balance { get; set; }
     }
 }

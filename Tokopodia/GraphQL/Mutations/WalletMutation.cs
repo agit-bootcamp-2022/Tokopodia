@@ -7,18 +7,14 @@ using Tokopodia.Data;
 using Tokopodia.Input;
 using Tokopodia.Models;
 using Tokopodia.Output;
-using Tokopodia.SyncDataService.Http;
 using System;
 using HotChocolate.Types;
 using HotChocolate.AspNetCore.Authorization;
-using Tokopodia.SyncDataService.Dtos;
 using Tokopodia.Helper;
 using Tokopodia.Data.Users;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.SellerProfiles;
 using Tokopodia.Data.Wallets;
-using Tokopodia.Helpers;
-using Tokopodia;
 namespace Tokopodia.GraphQL.Mutations
 {
   [ExtendObjectType(Name = "Mutation")]
@@ -28,17 +24,14 @@ namespace Tokopodia.GraphQL.Mutations
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly AppDbContext _db;
-    private readonly IUangTransDataClient _uangtransDataClient;
 
     public WalletMutation([Service] IMapper mapper,
                           [Service] IHttpContextAccessor httpContextAccessor,
-                          [Service] AppDbContext db,
-                          [Service] IUangTransDataClient uangTransDataClient)
+                          [Service] AppDbContext db)
     {
       _mapper = mapper;
       _httpContextAccessor = httpContextAccessor;
       _db = db;
-      _uangtransDataClient = uangTransDataClient;
     }
 
     [Authorize(Roles = new[] { "Buyer", "Seller" })]
