@@ -185,6 +185,8 @@ namespace Tokopodia.GraphQL.Mutations
         return new Message { message = "fail" };
       transactionResult.status = TransactionStatus.Completed;
       var updateTransaction = await _transaction.Update(transactionResult);
+      if (updateTransaction.status != TransactionStatus.Completed)
+        return new Message { message = "fail" };
       return new Message { message = "success" };
     }
 
