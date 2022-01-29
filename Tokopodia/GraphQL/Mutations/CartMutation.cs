@@ -94,7 +94,7 @@ namespace Tokopodia.GraphQL.Mutations
       }
 
       //Validasi input stock
-      if (input.Quantity < 0 || input.Quantity >= product.Stock)
+      if (input.Quantity < 0 || input.Quantity > product.Stock)
       {
         throw new Exception("Quantity cannot be negative");
       }

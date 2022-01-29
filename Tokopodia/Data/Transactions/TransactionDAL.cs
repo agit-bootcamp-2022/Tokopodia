@@ -32,7 +32,43 @@ namespace Tokopodia.Data.Transactions
 
     public async Task<Transaction> GetById(int transactionId)
     {
-      var result = await _db.Transactions.Include(t => t.Carts).Where(t => t.TransactionId == transactionId).FirstOrDefaultAsync();
+      var result = await _db.Transactions
+                          .Include(t => t.Carts)
+                            .ThenInclude(t => t.Buyer)
+                          .Include(t => t.Carts)
+                            .ThenInclude(t => t.Seller)
+                          .Include(t => t.Carts)
+                            .ThenInclude(t => t.Product)
+                          .Where(t => t.TransactionId == transactionId).FirstOrDefaultAsync();
+      return result;
+    }
+
+    public async Task<IEnumerable<Transaction>> GetByProfileId(int profileId, string profileType)
+    {
+      List<Transaction> result = new List<Transaction>();
+      if (profileType == "Seller")
+      {
+        result = await _db.Transactions
+                         .Include(t => t.Carts)
+                           .ThenInclude(t => t.Buyer)
+                         .Include(t => t.Carts.Where(c => c.Seller.Id == profileId))
+                           .ThenInclude(t => t.Seller)
+                         .Include(t => t.Carts)
+                           .ThenInclude(t => t.Product)
+                          .ToListAsync();
+
+      }
+      else if (profileType == "Buyer")
+      {
+        result = await _db.Transactions
+                                 .Include(t => t.Carts.Where(c => c.Seller.Id == profileId))
+                                   .ThenInclude(t => t.Buyer)
+                                 .Include(t => t.Carts)
+                                   .ThenInclude(t => t.Seller)
+                                 .Include(t => t.Carts)
+                                   .ThenInclude(t => t.Product)
+                                  .ToListAsync();
+      }
       return result;
     }
 
