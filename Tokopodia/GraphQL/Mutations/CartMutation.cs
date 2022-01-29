@@ -89,20 +89,19 @@ namespace Tokopodia.GraphQL.Mutations
 
       if (buyyer == null)
       {
-        Console.WriteLine("Buyyer Not Found");
+        throw new Exception("Buyer Not Found");
       }
 
       //Validasi input stock
       if (input.Quantity < 0 || input.Quantity >= product.Stock)
       {
-        Console.WriteLine("Quantity cannot be negative");
+        throw new Exception("Quantity cannot be negative");
       }
 
       //Validasi lat dan long seller
       if (seller.LatSeller == 0 || seller.LongSeller == 0)
       {
-        Console.WriteLine("Seller has not input Lat and Long");
-
+        throw new Exception("Seller has not input Lat and Long");
       }
 
       //Validasi Input Jasa Kirim
@@ -117,7 +116,7 @@ namespace Tokopodia.GraphQL.Mutations
             {
                 if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
                 {
-                    Console.WriteLine("Buyer has not input Lat and Long");
+                    throw new Exception("Buyer has not input Lat and Long");
                 }
                 input.LatBuyer = buyyer.latBuyer;
                 input.LongBuyer = buyyer.longBuyer;
@@ -189,7 +188,7 @@ namespace Tokopodia.GraphQL.Mutations
 
       if (buyyer == null)
       {
-        Console.WriteLine("Buyyer Not Found");
+        throw new Exception("Buyer Not Found");
       }
 
       var cart = context.Carts.Where(c => c.Id == input.CartId).FirstOrDefault();
@@ -203,7 +202,7 @@ namespace Tokopodia.GraphQL.Mutations
         //Validasi input stock
             if (input.Quantity < 0 || input.Quantity >= product.Stock)
             {
-                Console.WriteLine("Quantity cannot be negative");
+                throw new Exception("Quantity cannot be negative");
             }
 
             //Validasi Input Jasa Kirim
@@ -217,7 +216,7 @@ namespace Tokopodia.GraphQL.Mutations
             {
                 if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
                 {
-                    Console.WriteLine("Buyer has not input Lat and Long");
+                    throw new Exception("Buyer has not input Lat and Long");
                 }
                 input.LatBuyer = buyyer.latBuyer;
                 input.LongBuyer = buyyer.longBuyer;
