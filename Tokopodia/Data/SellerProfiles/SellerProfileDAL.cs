@@ -37,7 +37,7 @@ namespace Tokopodia.Data.SellerProfiles
 
         public async Task<SellerProfile> GetProfileById(int profileId)
         {
-            var result = await _db.SellerProfiles.Where(b => b.Id == profileId).FirstOrDefaultAsync();
+            var result = await _db.SellerProfiles.Include(b => b.User).Where(b => b.Id == profileId).FirstOrDefaultAsync();
             return result;
         }
 
