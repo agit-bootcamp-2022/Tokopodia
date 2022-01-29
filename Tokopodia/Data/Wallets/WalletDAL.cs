@@ -21,5 +21,11 @@ namespace Tokopodia.Data.Wallets
       var result = await _db.Wallets.Where(w => w.UserId == UserId).FirstOrDefaultAsync();
       return result;
     }
+    public async Task<Wallet> Insert(Wallet input)
+    {
+      var result = await _db.Wallets.AddAsync(input);
+      await _db.SaveChangesAsync();
+      return result.Entity;
+    }
   }
 }

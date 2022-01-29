@@ -10,5 +10,6 @@ namespace Tokopodia.Data.Wallets
   public interface IWallet
   {
     Task<Wallet> GetByUserId(string UserId);
+    Task<Wallet> Insert(Wallet input);
   }
 }
