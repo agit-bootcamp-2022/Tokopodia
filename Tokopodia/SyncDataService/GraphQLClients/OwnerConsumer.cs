@@ -70,7 +70,7 @@ namespace Tokopodia.SyncDataService.GraphQLClients
       var graphQLClient = new GraphQLHttpClient(_appSettings.UangTrans, new NewtonsoftJsonSerializer());
       graphQLClient.HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
       var response = await graphQLClient.SendMutationAsync<TransactionUangTransCreateOutput>(query);
-      Console.WriteLine("===>" + response.Data.createTransaction);
+      Console.WriteLine("===>" + response.Data.createTransaction.message);
       return response.Data.createTransaction;
     }
   }

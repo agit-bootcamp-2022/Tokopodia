@@ -54,6 +54,7 @@ namespace Tokopodia.GraphQL.Mutations
           throw new Exception("Unauthorized.");
         // cek semu cart list yang statusnya OnCart
         var carts = await _cart.GetAllByStatusOnCartAndBuyerId(profileResult.Id);
+
         // hitung SumBillingSeller
         // hitung SumShippingCost
         var sumBillingSeller = 0.0;
@@ -73,7 +74,7 @@ namespace Tokopodia.GraphQL.Mutations
         var loginResult = await _uangTrans.LoginUser.ExecuteAsync(new LoginUserInput { Username = walletuser.Username, Password = walletuser.Password });
         if (loginResult.Data.LoginUser.Token == null)
           throw new Exception("Invalid Username/password. Error fetch token from wallet service. ");
-        // var loginResult = await _uangTrans.LoginUser.ExecuteAsync(new LoginUserInput { Username = "test", Password = "Kosongkan@Saja1" });
+        loginResult = await _uangTrans.LoginUser.ExecuteAsync(new LoginUserInput { Username = walletuser.Username, Password = walletuser.Password });
         Console.WriteLine("token: " + loginResult.Data.LoginUser.Token);
         // get saldo for buyer
         var saldo = await _consume.GetSaldo(loginResult.Data.LoginUser.Token);
@@ -84,6 +85,7 @@ namespace Tokopodia.GraphQL.Mutations
         if (totalBilling > saldo.balance)
           throw new Exception("Saldo wallet is not enought.");
         // update stok product ke database
+        // TODO: jangan lupa di uncomment
         foreach (var cart in carts)
         {
           cart.Product.Stock = cart.Product.Stock - cart.Quantity;
@@ -93,12 +95,16 @@ namespace Tokopodia.GraphQL.Mutations
           var updateResult = await _product.Update(cart.Product);
           cart.Product = updateResult;
           var cartUpdate = await _cart.Update(cart);
+
         }
+
         IList<SellerCreateInput> sellers = new List<SellerCreateInput>();
         foreach (var cart in carts)
         {
-          sellers.Add(new SellerCreateInput { amountSeller = (float)cart.BillingSeller, sellerId = (int)cart.SellerId });
+          var sellerWallet = await _wallet.GetByUserId(cart.Seller.UserId);
+          sellers.Add(new SellerCreateInput { amountSeller = (float)cart.BillingSeller, sellerId = sellerWallet.UangTransId });
         }
+
         //create transaction
         var tranInput = new TransactionCreate
         {
@@ -110,6 +116,7 @@ namespace Tokopodia.GraphQL.Mutations
         var walletTransaction = await _consume.CreateTransaction(tranInput, loginResult.Data.LoginUser.Token);
         if (walletTransaction.message != "Success")
           throw new Exception("Failed to create transaction on wallet service");
+
         var courier = await _user.Authenticate(new Input.LoginInput { Username = "courier1", Password = "Courier1!" }, "Courier");
         // simpan semuanya di transaction
         var transactionInput = new Transaction
@@ -125,6 +132,7 @@ namespace Tokopodia.GraphQL.Mutations
           WalletTransactionId = walletTransaction.transactionId
         };
         var transaction = await _transaction.Insert(transactionInput);
+
         // create shipping ke anter express dengan for each
         IList<Cart> cartsObj = new List<Cart>();
         foreach (var cart in carts)
@@ -177,13 +185,5 @@ namespace Tokopodia.GraphQL.Mutations
       return new Message { message = "success" };
     }
 
-    [Authorize(Roles = new[] { "Courier" })]
-    public async Task<TransactionOutput> GetTransactionById(int transactionId, [Service] ITransaction _transaction)
-    {
-      var transactionResult = await _transaction.GetById(transactionId);
-      var transOutput = _mapper.Map<TransactionOutput>(transactionResult);
-      transOutput.CartsOutput = _mapper.Map<IEnumerable<CartOutput>>(transactionResult.Carts);
-      return transOutput;
-    }
   }
 }
