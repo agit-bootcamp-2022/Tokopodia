@@ -241,6 +241,8 @@ namespace Tokopodia.GraphQL.Mutations
             cart.LatBuyer = input.LatBuyer;
             cart.LongBuyer = input.LongBuyer;
             cart.ShippingCost = fee;
+            cart.BillingSeller = product.Price * input.Quantity;
+            cart.Weight = input.Quantity * product.Weight;
             cart.ShippingTypeId = input.ShippingTypeId;
 
             var ret = context.Carts.Update(cart);
