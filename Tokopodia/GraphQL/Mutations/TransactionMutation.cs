@@ -18,6 +18,7 @@ using Tokopodia.SyncDataService.Dtos;
 using Tokopodia.Output;
 using System.Collections.Generic;
 using AutoMapper;
+using System.Linq;
 
 namespace Tokopodia.GraphQL.Mutations
 {
@@ -54,7 +55,7 @@ namespace Tokopodia.GraphQL.Mutations
           throw new Exception("Unauthorized.");
         // cek semu cart list yang statusnya OnCart
         var carts = await _cart.GetAllByStatusOnCartAndBuyerId(profileResult.Id);
-        if (carts == null)
+        if (!carts.IsAny())
         {
           throw new Exception("cart not found");
         }
@@ -187,5 +188,13 @@ namespace Tokopodia.GraphQL.Mutations
       return new Message { message = "success" };
     }
 
+  }
+
+  public static class Utils
+  {
+    public static bool IsAny<T>(this IEnumerable<T> data)
+    {
+      return data != null && data.Any();
+    }
   }
 }
