@@ -100,8 +100,6 @@ namespace Tokopodia
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-      //services.AddHttpClient<IUangTransDataClient, HttpUangTransDataClient>();
-
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
