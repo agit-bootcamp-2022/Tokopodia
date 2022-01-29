@@ -89,6 +89,9 @@ namespace Tokopodia.GraphQL.Mutations
 
             var seller = context.Products.Where(o => o.SellerId == profileResult.Id).FirstOrDefault();
 
+            if (seller == null)
+                throw new ProductNotFound();
+
             if (input.Stock < 0 || input.Price < 0 || input.Weight < 0)
                 throw new ValueNegative();
 
