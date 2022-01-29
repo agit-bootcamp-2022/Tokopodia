@@ -18,6 +18,7 @@ using Tokopodia.SyncDataService.Dtos;
 using Tokopodia.Output;
 using System.Collections.Generic;
 using AutoMapper;
+using System.Linq;
 
 namespace Tokopodia.GraphQL.Mutations
 {
@@ -54,7 +55,10 @@ namespace Tokopodia.GraphQL.Mutations
           throw new Exception("Unauthorized.");
         // cek semu cart list yang statusnya OnCart
         var carts = await _cart.GetAllByStatusOnCartAndBuyerId(profileResult.Id);
-
+        if (!carts.IsAny())
+        {
+          throw new Exception("cart not found");
+        }
         // hitung SumBillingSeller
         // hitung SumShippingCost
         var sumBillingSeller = 0.0;
@@ -74,8 +78,6 @@ namespace Tokopodia.GraphQL.Mutations
         var loginResult = await _uangTrans.LoginUser.ExecuteAsync(new LoginUserInput { Username = walletuser.Username, Password = walletuser.Password });
         if (loginResult.Data.LoginUser.Token == null)
           throw new Exception("Invalid Username/password. Error fetch token from wallet service. ");
-        loginResult = await _uangTrans.LoginUser.ExecuteAsync(new LoginUserInput { Username = walletuser.Username, Password = walletuser.Password });
-        Console.WriteLine("token: " + loginResult.Data.LoginUser.Token);
         // get saldo for buyer
         var saldo = await _consume.GetSaldo(loginResult.Data.LoginUser.Token);
         if (loginResult.Data.LoginUser.Token == null)
@@ -101,6 +103,8 @@ namespace Tokopodia.GraphQL.Mutations
         foreach (var cart in carts)
         {
           var sellerWallet = await _wallet.GetByUserId(cart.Seller.UserId);
+          if (sellerWallet == null)
+            throw new Exception($"wallet seller not found. Please add wallet first for user: {cart.Seller.Username}");
           sellers.Add(new SellerCreateInput { amountSeller = (float)cart.BillingSeller, sellerId = sellerWallet.UangTransId });
         }
 
@@ -184,5 +188,13 @@ namespace Tokopodia.GraphQL.Mutations
       return new Message { message = "success" };
     }
 
+  }
+
+  public static class Utils
+  {
+    public static bool IsAny<T>(this IEnumerable<T> data)
+    {
+      return data != null && data.Any();
+    }
   }
 }
