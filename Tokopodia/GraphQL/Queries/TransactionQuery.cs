@@ -56,33 +56,6 @@ namespace Tokopodia.GraphQL.Queries
 
     }
 
-    [Authorize(Roles = new[] { "Buyer" })]
-    public async Task<TransactionOutput> GetTransaction(int transactionId,
-                                                            [Service] ITransaction _transaction,
-                                                            [Service] IBuyerProfile _buyer,
-                                                            [Service] ISellerProfile _seller,
-                                                            [Service] IProduct _product)
-    {
-      try
-      {
-        var transactionResult = await _transaction.GetById(transactionId);
-        if (transactionResult == null)
-          throw new Exception("Data not found");
-        var transOutput = _mapper.Map<TransactionOutput>(transactionResult);
-        foreach (var cart in transactionResult.Carts)
-        {
-          Console.WriteLine("name: " + cart.Product.Name);
-        }
-        transOutput.CartsOutput = _mapper.Map<IEnumerable<CartOutput>>(transactionResult.Carts);
-        return transOutput;
-      }
-      catch (System.Exception ex)
-      {
-        throw new DataFailed(ex.Message);
-      }
-
-    }
-
     [Authorize(Roles = new[] { "Seller", "Buyer" })]
     public async Task<IEnumerable<TransactionOutput>> GetTransactionByProfileId(
                                                             [Service] ITransaction _transaction,
