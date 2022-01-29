@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tokopodia.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -252,7 +252,7 @@ namespace Tokopodia.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UangTransId = table.Column<int>(type: "int", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,7 +284,7 @@ namespace Tokopodia.Migrations
                     ShippingId = table.Column<int>(type: "int", nullable: false),
                     ShippingTypeId = table.Column<int>(type: "int", nullable: false),
                     ShippingCost = table.Column<double>(type: "float", nullable: false),
-                    TransactionId = table.Column<int>(type: "int", nullable: false),
+                    TransactionId = table.Column<int>(type: "int", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -313,7 +313,7 @@ namespace Tokopodia.Migrations
                         column: x => x.TransactionId,
                         principalTable: "Transactions",
                         principalColumn: "TransactionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
