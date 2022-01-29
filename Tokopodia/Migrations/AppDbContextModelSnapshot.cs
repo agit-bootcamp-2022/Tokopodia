@@ -300,7 +300,7 @@ namespace Tokopodia.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TransactionId")
+                    b.Property<int?>("TransactionId")
                         .HasColumnType("int");
 
                     b.Property<double>("Weight")
@@ -444,6 +444,7 @@ namespace Tokopodia.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UangTransId")
@@ -544,9 +545,7 @@ namespace Tokopodia.Migrations
 
                     b.HasOne("Tokopodia.Models.Transaction", "Transaction")
                         .WithMany("Carts")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TransactionId");
 
                     b.Navigation("Buyer");
 

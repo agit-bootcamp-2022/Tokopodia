@@ -16,6 +16,7 @@ namespace Tokopodia.Models
     [Required]
     public string Username { get; set; } //usernama for login wallet service
 
+    [Required]
     public string Password { get; set; } //pass utk login ke wallet service
 
     public IdentityUser User { get; set; }

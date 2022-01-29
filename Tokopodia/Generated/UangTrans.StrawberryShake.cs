@@ -15,8 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 return new ClientServiceProvider(global::Microsoft.Extensions.DependencyInjection.ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(serviceCollection));
             });
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => new global::Tokopodia.State.UangTransStoreAccessor(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IEntityStore>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IEntityIdSerializer>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.IOperationRequestFactory>>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.IOperationResultDataFactory>>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp))));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.RegisterUserMutation>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.LoginUserMutation>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.RegisterUserMutation>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.UangTrans>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.IUangTrans>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             return new global::StrawberryShake.ClientBuilder<global::Tokopodia.State.UangTransStoreAccessor>("UangTrans", services, serviceCollection);
@@ -47,16 +47,9 @@ namespace Microsoft.Extensions.DependencyInjection
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.ByteArraySerializer>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.TimeSpanSerializer>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.JsonSerializer>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::Tokopodia.RegisterInputInputValueFormatter>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::Tokopodia.LoginUserInputInputValueFormatter>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::Tokopodia.RegisterInputInputValueFormatter>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializerResolver>(services, sp => new global::StrawberryShake.Serialization.SerializerResolver(global::System.Linq.Enumerable.Concat(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.Serialization.ISerializer>>(parentServices), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.Serialization.ISerializer>>(sp))));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.IRegisterUserResult>, global::Tokopodia.State.RegisterUserResultFactory>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.IRegisterUserResult>>(sp));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationRequestFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.IRegisterUserMutation>(sp));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::Tokopodia.IRegisterUserResult>, global::Tokopodia.State.RegisterUserBuilder>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationExecutor<global::Tokopodia.IRegisterUserResult>>(services, sp => new global::StrawberryShake.OperationExecutor<global::System.Text.Json.JsonDocument, global::Tokopodia.IRegisterUserResult>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.Transport.Http.IHttpConnection>(sp), () => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::Tokopodia.IRegisterUserResult>>(sp), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(sp), strategy));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.RegisterUserMutation>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.IRegisterUserMutation>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.RegisterUserMutation>(sp));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.ILoginUserResult>, global::Tokopodia.State.LoginUserResultFactory>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.ILoginUserResult>>(sp));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationRequestFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.ILoginUserMutation>(sp));
@@ -64,6 +57,13 @@ namespace Microsoft.Extensions.DependencyInjection
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationExecutor<global::Tokopodia.ILoginUserResult>>(services, sp => new global::StrawberryShake.OperationExecutor<global::System.Text.Json.JsonDocument, global::Tokopodia.ILoginUserResult>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.Transport.Http.IHttpConnection>(sp), () => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::Tokopodia.ILoginUserResult>>(sp), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(sp), strategy));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.LoginUserMutation>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.ILoginUserMutation>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.LoginUserMutation>(sp));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.IRegisterUserResult>, global::Tokopodia.State.RegisterUserResultFactory>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.IRegisterUserResult>>(sp));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationRequestFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.IRegisterUserMutation>(sp));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::Tokopodia.IRegisterUserResult>, global::Tokopodia.State.RegisterUserBuilder>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationExecutor<global::Tokopodia.IRegisterUserResult>>(services, sp => new global::StrawberryShake.OperationExecutor<global::System.Text.Json.JsonDocument, global::Tokopodia.IRegisterUserResult>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.Transport.Http.IHttpConnection>(sp), () => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::Tokopodia.IRegisterUserResult>>(sp), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(sp), strategy));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.RegisterUserMutation>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.IRegisterUserMutation>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.RegisterUserMutation>(sp));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityIdSerializer, global::Tokopodia.State.UangTransEntityIdFactory>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.UangTrans>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::Tokopodia.IUangTrans>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::Tokopodia.UangTrans>(sp));
@@ -96,6 +96,173 @@ namespace Microsoft.Extensions.DependencyInjection
 
 namespace Tokopodia
 {
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public partial class LoginUserResult : global::System.IEquatable<LoginUserResult>, ILoginUserResult
+    {
+        public LoginUserResult(global::Tokopodia.ILoginUser_LoginUser? loginUser)
+        {
+            LoginUser = loginUser;
+        }
+
+        public global::Tokopodia.ILoginUser_LoginUser? LoginUser { get; }
+
+        public virtual global::System.Boolean Equals(LoginUserResult? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (((LoginUser is null && other.LoginUser is null) || LoginUser != null && LoginUser.Equals(other.LoginUser)));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((LoginUserResult)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (LoginUser != null)
+                {
+                    hash ^= 397 * LoginUser.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public partial class LoginUser_LoginUser_UserToken : global::System.IEquatable<LoginUser_LoginUser_UserToken>, ILoginUser_LoginUser_UserToken
+    {
+        public LoginUser_LoginUser_UserToken(global::System.String? token, global::System.String? expired, global::System.String? message)
+        {
+            Token = token;
+            Expired = expired;
+            Message = message;
+        }
+
+        public global::System.String? Token { get; }
+
+        public global::System.String? Expired { get; }
+
+        public global::System.String? Message { get; }
+
+        public virtual global::System.Boolean Equals(LoginUser_LoginUser_UserToken? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (((Token is null && other.Token is null) || Token != null && Token.Equals(other.Token))) && ((Expired is null && other.Expired is null) || Expired != null && Expired.Equals(other.Expired)) && ((Message is null && other.Message is null) || Message != null && Message.Equals(other.Message));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((LoginUser_LoginUser_UserToken)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (Token != null)
+                {
+                    hash ^= 397 * Token.GetHashCode();
+                }
+
+                if (Expired != null)
+                {
+                    hash ^= 397 * Expired.GetHashCode();
+                }
+
+                if (Message != null)
+                {
+                    hash ^= 397 * Message.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public interface ILoginUserResult
+    {
+        public global::Tokopodia.ILoginUser_LoginUser? LoginUser { get; }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public interface ILoginUser_LoginUser
+    {
+        public global::System.String? Token { get; }
+
+        public global::System.String? Expired { get; }
+
+        public global::System.String? Message { get; }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public interface ILoginUser_LoginUser_UserToken : ILoginUser_LoginUser
+    {
+    }
+
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
     public partial class RegisterUserResult : global::System.IEquatable<RegisterUserResult>, IRegisterUserResult
     {
@@ -372,35 +539,71 @@ namespace Tokopodia
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserResult : global::System.IEquatable<LoginUserResult>, ILoginUserResult
+    public partial class LoginUserInputInputValueFormatter : global::StrawberryShake.Serialization.IInputObjectFormatter
     {
-        public LoginUserResult(global::Tokopodia.ILoginUser_LoginUser? loginUser)
+        private global::StrawberryShake.Serialization.IInputValueFormatter _stringFormatter = default !;
+        public global::System.String TypeName => "LoginUserInput";
+        public void Initialize(global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
         {
-            LoginUser = loginUser;
+            _stringFormatter = serializerResolver.GetInputValueFormatter("String");
         }
 
-        public global::Tokopodia.ILoginUser_LoginUser? LoginUser { get; }
-
-        public virtual global::System.Boolean Equals(LoginUserResult? other)
+        public global::System.Object? Format(global::System.Object? runtimeValue)
         {
-            if (ReferenceEquals(null, other))
+            if (runtimeValue is null)
             {
-                return false;
+                return null;
             }
 
-            if (ReferenceEquals(this, other))
+            var input = runtimeValue as global::Tokopodia.LoginUserInput;
+            var inputInfo = runtimeValue as global::Tokopodia.State.ILoginUserInputInfo;
+            if (input is null || inputInfo is null)
             {
-                return true;
+                throw new global::System.ArgumentException(nameof(runtimeValue));
             }
 
-            if (other.GetType() != GetType())
+            var fields = new global::System.Collections.Generic.List<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>>();
+            if (inputInfo.IsUsernameSet)
             {
-                return false;
+                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("username", FormatUsername(input.Username)));
             }
 
-            return (((LoginUser is null && other.LoginUser is null) || LoginUser != null && LoginUser.Equals(other.LoginUser)));
+            if (inputInfo.IsPasswordSet)
+            {
+                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("password", FormatPassword(input.Password)));
+            }
+
+            return fields;
         }
 
+        private global::System.Object? FormatUsername(global::System.String? input)
+        {
+            if (input is null)
+            {
+                return input;
+            }
+            else
+            {
+                return _stringFormatter.Format(input);
+            }
+        }
+
+        private global::System.Object? FormatPassword(global::System.String? input)
+        {
+            if (input is null)
+            {
+                return input;
+            }
+            else
+            {
+                return _stringFormatter.Format(input);
+            }
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public partial class LoginUserInput : global::Tokopodia.State.ILoginUserInputInfo, global::System.IEquatable<LoginUserInput>
+    {
         public override global::System.Boolean Equals(global::System.Object? obj)
         {
             if (ReferenceEquals(null, obj))
@@ -418,41 +621,10 @@ namespace Tokopodia
                 return false;
             }
 
-            return Equals((LoginUserResult)obj);
+            return Equals((LoginUserInput)obj);
         }
 
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                if (LoginUser != null)
-                {
-                    hash ^= 397 * LoginUser.GetHashCode();
-                }
-
-                return hash;
-            }
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUser_LoginUser_UserToken : global::System.IEquatable<LoginUser_LoginUser_UserToken>, ILoginUser_LoginUser_UserToken
-    {
-        public LoginUser_LoginUser_UserToken(global::System.String? token, global::System.String? expired, global::System.String? message)
-        {
-            Token = token;
-            Expired = expired;
-            Message = message;
-        }
-
-        public global::System.String? Token { get; }
-
-        public global::System.String? Expired { get; }
-
-        public global::System.String? Message { get; }
-
-        public virtual global::System.Boolean Equals(LoginUser_LoginUser_UserToken? other)
+        public virtual global::System.Boolean Equals(LoginUserInput? other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -469,27 +641,7 @@ namespace Tokopodia
                 return false;
             }
 
-            return (((Token is null && other.Token is null) || Token != null && Token.Equals(other.Token))) && ((Expired is null && other.Expired is null) || Expired != null && Expired.Equals(other.Expired)) && ((Message is null && other.Message is null) || Message != null && Message.Equals(other.Message));
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((LoginUser_LoginUser_UserToken)obj);
+            return (((Username is null && other.Username is null) || Username != null && Username.Equals(other.Username))) && ((Password is null && other.Password is null) || Password != null && Password.Equals(other.Password));
         }
 
         public override global::System.Int32 GetHashCode()
@@ -497,45 +649,46 @@ namespace Tokopodia
             unchecked
             {
                 int hash = 5;
-                if (Token != null)
+                if (Username != null)
                 {
-                    hash ^= 397 * Token.GetHashCode();
+                    hash ^= 397 * Username.GetHashCode();
                 }
 
-                if (Expired != null)
+                if (Password != null)
                 {
-                    hash ^= 397 * Expired.GetHashCode();
-                }
-
-                if (Message != null)
-                {
-                    hash ^= 397 * Message.GetHashCode();
+                    hash ^= 397 * Password.GetHashCode();
                 }
 
                 return hash;
             }
         }
-    }
 
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public interface ILoginUserResult
-    {
-        public global::Tokopodia.ILoginUser_LoginUser? LoginUser { get; }
-    }
+        private global::System.String? _value_username;
+        private global::System.Boolean _set_username;
+        private global::System.String? _value_password;
+        private global::System.Boolean _set_password;
+        public global::System.String? Username
+        {
+            get => _value_username;
+            set
+            {
+                _set_username = true;
+                _value_username = value;
+            }
+        }
 
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public interface ILoginUser_LoginUser
-    {
-        public global::System.String? Token { get; }
+        global::System.Boolean global::Tokopodia.State.ILoginUserInputInfo.IsUsernameSet => _set_username;
+        public global::System.String? Password
+        {
+            get => _value_password;
+            set
+            {
+                _set_password = true;
+                _value_password = value;
+            }
+        }
 
-        public global::System.String? Expired { get; }
-
-        public global::System.String? Message { get; }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public interface ILoginUser_LoginUser_UserToken : ILoginUser_LoginUser
-    {
+        global::System.Boolean global::Tokopodia.State.ILoginUserInputInfo.IsPasswordSet => _set_password;
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
@@ -796,157 +949,125 @@ namespace Tokopodia
         global::System.Boolean global::Tokopodia.State.IRegisterInputInfo.IsPasswordSet => _set_password;
     }
 
+    /// <summary>
+    /// Represents the operation service of the LoginUser GraphQL operation
+    /// <code>
+    /// mutation LoginUser($input: LoginUserInput) {
+    ///   loginUser(input: $input) {
+    ///     __typename
+    ///     token
+    ///     expired
+    ///     message
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserInputInputValueFormatter : global::StrawberryShake.Serialization.IInputObjectFormatter
+    public partial class LoginUserMutationDocument : global::StrawberryShake.IDocument
     {
-        private global::StrawberryShake.Serialization.IInputValueFormatter _stringFormatter = default !;
-        public global::System.String TypeName => "LoginUserInput";
-        public void Initialize(global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
+        private LoginUserMutationDocument()
         {
-            _stringFormatter = serializerResolver.GetInputValueFormatter("String");
         }
 
-        public global::System.Object? Format(global::System.Object? runtimeValue)
+        public static LoginUserMutationDocument Instance { get; } = new LoginUserMutationDocument();
+        public global::StrawberryShake.OperationKind Kind => global::StrawberryShake.OperationKind.Mutation;
+        public global::System.ReadOnlySpan<global::System.Byte> Body => new global::System.Byte[]{0x6d, 0x75, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x28, 0x24, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x3a, 0x20, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x29, 0x20, 0x7b, 0x20, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x28, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x3a, 0x20, 0x24, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x20, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x64, 0x20, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x7d, 0x20, 0x7d};
+        public global::StrawberryShake.DocumentHash Hash { get; } = new global::StrawberryShake.DocumentHash("md5Hash", "d5e5efecf2f3b5d8caf037173c4f95bc");
+        public override global::System.String ToString()
         {
-            if (runtimeValue is null)
-            {
-                return null;
-            }
-
-            var input = runtimeValue as global::Tokopodia.LoginUserInput;
-            var inputInfo = runtimeValue as global::Tokopodia.State.ILoginUserInputInfo;
-            if (input is null || inputInfo is null)
-            {
-                throw new global::System.ArgumentException(nameof(runtimeValue));
-            }
-
-            var fields = new global::System.Collections.Generic.List<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>>();
-            if (inputInfo.IsUsernameSet)
-            {
-                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("username", FormatUsername(input.Username)));
-            }
-
-            if (inputInfo.IsPasswordSet)
-            {
-                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("password", FormatPassword(input.Password)));
-            }
-
-            return fields;
-        }
-
-        private global::System.Object? FormatUsername(global::System.String? input)
-        {
-            if (input is null)
-            {
-                return input;
-            }
-            else
-            {
-                return _stringFormatter.Format(input);
-            }
-        }
-
-        private global::System.Object? FormatPassword(global::System.String? input)
-        {
-            if (input is null)
-            {
-                return input;
-            }
-            else
-            {
-                return _stringFormatter.Format(input);
-            }
+#if NETSTANDARD2_0
+        return global::System.Text.Encoding.UTF8.GetString(Body.ToArray());
+#else
+            return global::System.Text.Encoding.UTF8.GetString(Body);
+#endif
         }
     }
 
+    /// <summary>
+    /// Represents the operation service of the LoginUser GraphQL operation
+    /// <code>
+    /// mutation LoginUser($input: LoginUserInput) {
+    ///   loginUser(input: $input) {
+    ///     __typename
+    ///     token
+    ///     expired
+    ///     message
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserInput : global::Tokopodia.State.ILoginUserInputInfo, global::System.IEquatable<LoginUserInput>
+    public partial class LoginUserMutation : global::Tokopodia.ILoginUserMutation
     {
-        public override global::System.Boolean Equals(global::System.Object? obj)
+        private readonly global::StrawberryShake.IOperationExecutor<ILoginUserResult> _operationExecutor;
+        private readonly global::StrawberryShake.Serialization.IInputValueFormatter _loginUserInputFormatter;
+        public LoginUserMutation(global::StrawberryShake.IOperationExecutor<ILoginUserResult> operationExecutor, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((LoginUserInput)obj);
+            _operationExecutor = operationExecutor ?? throw new global::System.ArgumentNullException(nameof(operationExecutor));
+            _loginUserInputFormatter = serializerResolver.GetInputValueFormatter("LoginUserInput");
         }
 
-        public virtual global::System.Boolean Equals(LoginUserInput? other)
+        global::System.Type global::StrawberryShake.IOperationRequestFactory.ResultType => typeof(ILoginUserResult);
+        public async global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<ILoginUserResult>> ExecuteAsync(global::Tokopodia.LoginUserInput? input, global::System.Threading.CancellationToken cancellationToken = default)
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return (((Username is null && other.Username is null) || Username != null && Username.Equals(other.Username))) && ((Password is null && other.Password is null) || Password != null && Password.Equals(other.Password));
+            var request = CreateRequest(input);
+            return await _operationExecutor.ExecuteAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        public override global::System.Int32 GetHashCode()
+        public global::System.IObservable<global::StrawberryShake.IOperationResult<ILoginUserResult>> Watch(global::Tokopodia.LoginUserInput? input, global::StrawberryShake.ExecutionStrategy? strategy = null)
         {
-            unchecked
+            var request = CreateRequest(input);
+            return _operationExecutor.Watch(request, strategy);
+        }
+
+        private global::StrawberryShake.OperationRequest CreateRequest(global::Tokopodia.LoginUserInput? input)
+        {
+            var variables = new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>();
+            variables.Add("input", FormatInput(input));
+            return CreateRequest(variables);
+        }
+
+        private global::StrawberryShake.OperationRequest CreateRequest(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
+        {
+            return new global::StrawberryShake.OperationRequest(id: LoginUserMutationDocument.Instance.Hash.Value, name: "LoginUser", document: LoginUserMutationDocument.Instance, strategy: global::StrawberryShake.RequestStrategy.Default, variables: variables);
+        }
+
+        private global::System.Object? FormatInput(global::Tokopodia.LoginUserInput? value)
+        {
+            if (value is null)
             {
-                int hash = 5;
-                if (Username != null)
-                {
-                    hash ^= 397 * Username.GetHashCode();
-                }
-
-                if (Password != null)
-                {
-                    hash ^= 397 * Password.GetHashCode();
-                }
-
-                return hash;
+                return value;
+            }
+            else
+            {
+                return _loginUserInputFormatter.Format(value);
             }
         }
 
-        private global::System.String? _value_username;
-        private global::System.Boolean _set_username;
-        private global::System.String? _value_password;
-        private global::System.Boolean _set_password;
-        public global::System.String? Username
+        global::StrawberryShake.OperationRequest global::StrawberryShake.IOperationRequestFactory.Create(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
         {
-            get => _value_username;
-            set
-            {
-                _set_username = true;
-                _value_username = value;
-            }
+            return CreateRequest(variables!);
         }
+    }
 
-        global::System.Boolean global::Tokopodia.State.ILoginUserInputInfo.IsUsernameSet => _set_username;
-        public global::System.String? Password
-        {
-            get => _value_password;
-            set
-            {
-                _set_password = true;
-                _value_password = value;
-            }
-        }
-
-        global::System.Boolean global::Tokopodia.State.ILoginUserInputInfo.IsPasswordSet => _set_password;
+    /// <summary>
+    /// Represents the operation service of the LoginUser GraphQL operation
+    /// <code>
+    /// mutation LoginUser($input: LoginUserInput) {
+    ///   loginUser(input: $input) {
+    ///     __typename
+    ///     token
+    ///     expired
+    ///     message
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public interface ILoginUserMutation : global::StrawberryShake.IOperationRequestFactory
+    {
+        global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<ILoginUserResult>> ExecuteAsync(global::Tokopodia.LoginUserInput? input, global::System.Threading.CancellationToken cancellationToken = default);
+        global::System.IObservable<global::StrawberryShake.IOperationResult<ILoginUserResult>> Watch(global::Tokopodia.LoginUserInput? input, global::StrawberryShake.ExecutionStrategy? strategy = null);
     }
 
     /// <summary>
@@ -1092,143 +1213,22 @@ namespace Tokopodia
     }
 
     /// <summary>
-    /// Represents the operation service of the LoginUser GraphQL operation
-    /// <code>
-    /// mutation LoginUser($input: LoginUserInput) {
-    ///   loginUser(input: $input) {
-    ///     __typename
-    ///     token
-    ///     expired
-    ///     message
-    ///   }
-    /// }
-    /// </code>
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserMutationDocument : global::StrawberryShake.IDocument
-    {
-        private LoginUserMutationDocument()
-        {
-        }
-
-        public static LoginUserMutationDocument Instance { get; } = new LoginUserMutationDocument();
-        public global::StrawberryShake.OperationKind Kind => global::StrawberryShake.OperationKind.Mutation;
-        public global::System.ReadOnlySpan<global::System.Byte> Body => new global::System.Byte[]{0x6d, 0x75, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x28, 0x24, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x3a, 0x20, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x29, 0x20, 0x7b, 0x20, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x28, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x3a, 0x20, 0x24, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x20, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x64, 0x20, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x7d, 0x20, 0x7d};
-        public global::StrawberryShake.DocumentHash Hash { get; } = new global::StrawberryShake.DocumentHash("md5Hash", "d5e5efecf2f3b5d8caf037173c4f95bc");
-        public override global::System.String ToString()
-        {
-#if NETSTANDARD2_0
-        return global::System.Text.Encoding.UTF8.GetString(Body.ToArray());
-#else
-            return global::System.Text.Encoding.UTF8.GetString(Body);
-#endif
-        }
-    }
-
-    /// <summary>
-    /// Represents the operation service of the LoginUser GraphQL operation
-    /// <code>
-    /// mutation LoginUser($input: LoginUserInput) {
-    ///   loginUser(input: $input) {
-    ///     __typename
-    ///     token
-    ///     expired
-    ///     message
-    ///   }
-    /// }
-    /// </code>
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserMutation : global::Tokopodia.ILoginUserMutation
-    {
-        private readonly global::StrawberryShake.IOperationExecutor<ILoginUserResult> _operationExecutor;
-        private readonly global::StrawberryShake.Serialization.IInputValueFormatter _loginUserInputFormatter;
-        public LoginUserMutation(global::StrawberryShake.IOperationExecutor<ILoginUserResult> operationExecutor, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
-        {
-            _operationExecutor = operationExecutor ?? throw new global::System.ArgumentNullException(nameof(operationExecutor));
-            _loginUserInputFormatter = serializerResolver.GetInputValueFormatter("LoginUserInput");
-        }
-
-        global::System.Type global::StrawberryShake.IOperationRequestFactory.ResultType => typeof(ILoginUserResult);
-        public async global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<ILoginUserResult>> ExecuteAsync(global::Tokopodia.LoginUserInput? input, global::System.Threading.CancellationToken cancellationToken = default)
-        {
-            var request = CreateRequest(input);
-            return await _operationExecutor.ExecuteAsync(request, cancellationToken).ConfigureAwait(false);
-        }
-
-        public global::System.IObservable<global::StrawberryShake.IOperationResult<ILoginUserResult>> Watch(global::Tokopodia.LoginUserInput? input, global::StrawberryShake.ExecutionStrategy? strategy = null)
-        {
-            var request = CreateRequest(input);
-            return _operationExecutor.Watch(request, strategy);
-        }
-
-        private global::StrawberryShake.OperationRequest CreateRequest(global::Tokopodia.LoginUserInput? input)
-        {
-            var variables = new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>();
-            variables.Add("input", FormatInput(input));
-            return CreateRequest(variables);
-        }
-
-        private global::StrawberryShake.OperationRequest CreateRequest(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
-        {
-            return new global::StrawberryShake.OperationRequest(id: LoginUserMutationDocument.Instance.Hash.Value, name: "LoginUser", document: LoginUserMutationDocument.Instance, strategy: global::StrawberryShake.RequestStrategy.Default, variables: variables);
-        }
-
-        private global::System.Object? FormatInput(global::Tokopodia.LoginUserInput? value)
-        {
-            if (value is null)
-            {
-                return value;
-            }
-            else
-            {
-                return _loginUserInputFormatter.Format(value);
-            }
-        }
-
-        global::StrawberryShake.OperationRequest global::StrawberryShake.IOperationRequestFactory.Create(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
-        {
-            return CreateRequest(variables!);
-        }
-    }
-
-    /// <summary>
-    /// Represents the operation service of the LoginUser GraphQL operation
-    /// <code>
-    /// mutation LoginUser($input: LoginUserInput) {
-    ///   loginUser(input: $input) {
-    ///     __typename
-    ///     token
-    ///     expired
-    ///     message
-    ///   }
-    /// }
-    /// </code>
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public interface ILoginUserMutation : global::StrawberryShake.IOperationRequestFactory
-    {
-        global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<ILoginUserResult>> ExecuteAsync(global::Tokopodia.LoginUserInput? input, global::System.Threading.CancellationToken cancellationToken = default);
-        global::System.IObservable<global::StrawberryShake.IOperationResult<ILoginUserResult>> Watch(global::Tokopodia.LoginUserInput? input, global::StrawberryShake.ExecutionStrategy? strategy = null);
-    }
-
-    /// <summary>
     /// Represents the UangTrans GraphQL client
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
     public partial class UangTrans : global::Tokopodia.IUangTrans
     {
-        private readonly global::Tokopodia.IRegisterUserMutation _registerUser;
         private readonly global::Tokopodia.ILoginUserMutation _loginUser;
-        public UangTrans(global::Tokopodia.IRegisterUserMutation registerUser, global::Tokopodia.ILoginUserMutation loginUser)
+        private readonly global::Tokopodia.IRegisterUserMutation _registerUser;
+        public UangTrans(global::Tokopodia.ILoginUserMutation loginUser, global::Tokopodia.IRegisterUserMutation registerUser)
         {
-            _registerUser = registerUser ?? throw new global::System.ArgumentNullException(nameof(registerUser));
             _loginUser = loginUser ?? throw new global::System.ArgumentNullException(nameof(loginUser));
+            _registerUser = registerUser ?? throw new global::System.ArgumentNullException(nameof(registerUser));
         }
 
         public static global::System.String ClientName => "UangTrans";
-        public global::Tokopodia.IRegisterUserMutation RegisterUser => _registerUser;
         public global::Tokopodia.ILoginUserMutation LoginUser => _loginUser;
+        public global::Tokopodia.IRegisterUserMutation RegisterUser => _registerUser;
     }
 
     /// <summary>
@@ -1237,14 +1237,87 @@ namespace Tokopodia
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
     public interface IUangTrans
     {
-        global::Tokopodia.IRegisterUserMutation RegisterUser { get; }
-
         global::Tokopodia.ILoginUserMutation LoginUser { get; }
+
+        global::Tokopodia.IRegisterUserMutation RegisterUser { get; }
     }
 }
 
 namespace Tokopodia.State
 {
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public partial class LoginUserResultFactory : global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.LoginUserResult>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        public LoginUserResultFactory(global::StrawberryShake.IEntityStore entityStore)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+        }
+
+        global::System.Type global::StrawberryShake.IOperationResultDataFactory.ResultType => typeof(global::Tokopodia.ILoginUserResult);
+        public LoginUserResult Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            if (dataInfo is LoginUserResultInfo info)
+            {
+                return new LoginUserResult(MapILoginUser_LoginUser(info.LoginUser, snapshot));
+            }
+
+            throw new global::System.ArgumentException("LoginUserResultInfo expected.");
+        }
+
+        private global::Tokopodia.ILoginUser_LoginUser? MapILoginUser_LoginUser(global::Tokopodia.State.UserTokenData? data, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            if (data is null)
+            {
+                return null;
+            }
+
+            ILoginUser_LoginUser returnValue = default !;
+            if (data?.__typename.Equals("UserToken", global::System.StringComparison.Ordinal) ?? false)
+            {
+                returnValue = new LoginUser_LoginUser_UserToken(data.Token, data.Expired, data.Message);
+            }
+            else
+            {
+                throw new global::System.NotSupportedException();
+            }
+
+            return returnValue;
+        }
+
+        global::System.Object global::StrawberryShake.IOperationResultDataFactory.Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot)
+        {
+            return Create(dataInfo, snapshot);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
+    public partial class LoginUserResultInfo : global::StrawberryShake.IOperationResultDataInfo
+    {
+        private readonly global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> _entityIds;
+        private readonly global::System.UInt64 _version;
+        public LoginUserResultInfo(global::Tokopodia.State.UserTokenData? loginUser, global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> entityIds, global::System.UInt64 version)
+        {
+            LoginUser = loginUser;
+            _entityIds = entityIds ?? throw new global::System.ArgumentNullException(nameof(entityIds));
+            _version = version;
+        }
+
+        public global::Tokopodia.State.UserTokenData? LoginUser { get; }
+
+        public global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> EntityIds => _entityIds;
+        public global::System.UInt64 Version => _version;
+        public global::StrawberryShake.IOperationResultDataInfo WithVersion(global::System.UInt64 version)
+        {
+            return new LoginUserResultInfo(LoginUser, _entityIds, version);
+        }
+    }
+
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
     public partial class RegisterUserResultFactory : global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.RegisterUserResult>
     {
@@ -1339,76 +1412,11 @@ namespace Tokopodia.State
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserResultFactory : global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.LoginUserResult>
+    internal interface ILoginUserInputInfo
     {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        public LoginUserResultFactory(global::StrawberryShake.IEntityStore entityStore)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-        }
+        global::System.Boolean IsUsernameSet { get; }
 
-        global::System.Type global::StrawberryShake.IOperationResultDataFactory.ResultType => typeof(global::Tokopodia.ILoginUserResult);
-        public LoginUserResult Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
-        {
-            if (snapshot is null)
-            {
-                snapshot = _entityStore.CurrentSnapshot;
-            }
-
-            if (dataInfo is LoginUserResultInfo info)
-            {
-                return new LoginUserResult(MapILoginUser_LoginUser(info.LoginUser, snapshot));
-            }
-
-            throw new global::System.ArgumentException("LoginUserResultInfo expected.");
-        }
-
-        private global::Tokopodia.ILoginUser_LoginUser? MapILoginUser_LoginUser(global::Tokopodia.State.UserTokenData? data, global::StrawberryShake.IEntityStoreSnapshot snapshot)
-        {
-            if (data is null)
-            {
-                return null;
-            }
-
-            ILoginUser_LoginUser returnValue = default !;
-            if (data?.__typename.Equals("UserToken", global::System.StringComparison.Ordinal) ?? false)
-            {
-                returnValue = new LoginUser_LoginUser_UserToken(data.Token, data.Expired, data.Message);
-            }
-            else
-            {
-                throw new global::System.NotSupportedException();
-            }
-
-            return returnValue;
-        }
-
-        global::System.Object global::StrawberryShake.IOperationResultDataFactory.Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot)
-        {
-            return Create(dataInfo, snapshot);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserResultInfo : global::StrawberryShake.IOperationResultDataInfo
-    {
-        private readonly global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> _entityIds;
-        private readonly global::System.UInt64 _version;
-        public LoginUserResultInfo(global::Tokopodia.State.UserTokenData? loginUser, global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> entityIds, global::System.UInt64 version)
-        {
-            LoginUser = loginUser;
-            _entityIds = entityIds ?? throw new global::System.ArgumentNullException(nameof(entityIds));
-            _version = version;
-        }
-
-        public global::Tokopodia.State.UserTokenData? LoginUser { get; }
-
-        public global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> EntityIds => _entityIds;
-        public global::System.UInt64 Version => _version;
-        public global::StrawberryShake.IOperationResultDataInfo WithVersion(global::System.UInt64 version)
-        {
-            return new LoginUserResultInfo(LoginUser, _entityIds, version);
-        }
+        global::System.Boolean IsPasswordSet { get; }
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
@@ -1426,11 +1434,91 @@ namespace Tokopodia.State
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    internal interface ILoginUserInputInfo
+    public partial class LoginUserBuilder : global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::Tokopodia.ILoginUserResult>
     {
-        global::System.Boolean IsUsernameSet { get; }
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        private readonly global::StrawberryShake.IEntityIdSerializer _idSerializer;
+        private readonly global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.ILoginUserResult> _resultDataFactory;
+        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.String> _stringParser;
+        public LoginUserBuilder(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityIdSerializer idSerializer, global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.ILoginUserResult> resultDataFactory, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+            _idSerializer = idSerializer ?? throw new global::System.ArgumentNullException(nameof(idSerializer));
+            _resultDataFactory = resultDataFactory ?? throw new global::System.ArgumentNullException(nameof(resultDataFactory));
+            _stringParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.String>("String") ?? throw new global::System.ArgumentException("No serializer for type `String` found.");
+        }
 
-        global::System.Boolean IsPasswordSet { get; }
+        public global::StrawberryShake.IOperationResult<ILoginUserResult> Build(global::StrawberryShake.Response<global::System.Text.Json.JsonDocument> response)
+        {
+            (ILoginUserResult Result, LoginUserResultInfo Info)? data = null;
+            global::System.Collections.Generic.IReadOnlyList<global::StrawberryShake.IClientError>? errors = null;
+            if (response.Exception is null)
+            {
+                try
+                {
+                    if (response.Body != null)
+                    {
+                        if (response.Body.RootElement.TryGetProperty("data", out global::System.Text.Json.JsonElement dataElement) && dataElement.ValueKind == global::System.Text.Json.JsonValueKind.Object)
+                        {
+                            data = BuildData(dataElement);
+                        }
+
+                        if (response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
+                        {
+                            errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
+                        }
+                    }
+                }
+                catch (global::System.Exception ex)
+                {
+                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(ex.Message, exception: ex, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
+                }
+            }
+            else
+            {
+                errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(response.Exception.Message, exception: response.Exception, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
+            }
+
+            return new global::StrawberryShake.OperationResult<ILoginUserResult>(data?.Result, data?.Info, _resultDataFactory, errors);
+        }
+
+        private (ILoginUserResult, LoginUserResultInfo) BuildData(global::System.Text.Json.JsonElement obj)
+        {
+            var entityIds = new global::System.Collections.Generic.HashSet<global::StrawberryShake.EntityId>();
+            global::StrawberryShake.IEntityStoreSnapshot snapshot = default !;
+            _entityStore.Update(session =>
+            {
+                snapshot = session.CurrentSnapshot;
+            });
+            var resultInfo = new LoginUserResultInfo(DeserializeILoginUser_LoginUser(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "loginUser")), entityIds, snapshot.Version);
+            return (_resultDataFactory.Create(resultInfo), resultInfo);
+        }
+
+        private global::Tokopodia.State.UserTokenData? DeserializeILoginUser_LoginUser(global::System.Text.Json.JsonElement? obj)
+        {
+            if (!obj.HasValue)
+            {
+                return null;
+            }
+
+            var typename = obj.Value.GetProperty("__typename").GetString();
+            if (typename?.Equals("UserToken", global::System.StringComparison.Ordinal) ?? false)
+            {
+                return new global::Tokopodia.State.UserTokenData(typename, token: DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "token")), expired: DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "expired")), message: DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "message")));
+            }
+
+            throw new global::System.NotSupportedException();
+        }
+
+        private global::System.String? DeserializeString(global::System.Text.Json.JsonElement? obj)
+        {
+            if (!obj.HasValue)
+            {
+                return null;
+            }
+
+            return _stringParser.Parse(obj.Value.GetString()!);
+        }
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
@@ -1562,91 +1650,23 @@ namespace Tokopodia.State
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class LoginUserBuilder : global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::Tokopodia.ILoginUserResult>
+    public partial class UserTokenData
     {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        private readonly global::StrawberryShake.IEntityIdSerializer _idSerializer;
-        private readonly global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.ILoginUserResult> _resultDataFactory;
-        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.String> _stringParser;
-        public LoginUserBuilder(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityIdSerializer idSerializer, global::StrawberryShake.IOperationResultDataFactory<global::Tokopodia.ILoginUserResult> resultDataFactory, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
+        public UserTokenData(global::System.String __typename, global::System.String? token = default !, global::System.String? expired = default !, global::System.String? message = default !)
         {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-            _idSerializer = idSerializer ?? throw new global::System.ArgumentNullException(nameof(idSerializer));
-            _resultDataFactory = resultDataFactory ?? throw new global::System.ArgumentNullException(nameof(resultDataFactory));
-            _stringParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.String>("String") ?? throw new global::System.ArgumentException("No serializer for type `String` found.");
+            this.__typename = __typename ?? throw new global::System.ArgumentNullException(nameof(__typename));
+            Token = token;
+            Expired = expired;
+            Message = message;
         }
 
-        public global::StrawberryShake.IOperationResult<ILoginUserResult> Build(global::StrawberryShake.Response<global::System.Text.Json.JsonDocument> response)
-        {
-            (ILoginUserResult Result, LoginUserResultInfo Info)? data = null;
-            global::System.Collections.Generic.IReadOnlyList<global::StrawberryShake.IClientError>? errors = null;
-            if (response.Exception is null)
-            {
-                try
-                {
-                    if (response.Body != null)
-                    {
-                        if (response.Body.RootElement.TryGetProperty("data", out global::System.Text.Json.JsonElement dataElement) && dataElement.ValueKind == global::System.Text.Json.JsonValueKind.Object)
-                        {
-                            data = BuildData(dataElement);
-                        }
+        public global::System.String __typename { get; }
 
-                        if (response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
-                        {
-                            errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
-                        }
-                    }
-                }
-                catch (global::System.Exception ex)
-                {
-                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(ex.Message, exception: ex, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
-                }
-            }
-            else
-            {
-                errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(response.Exception.Message, exception: response.Exception, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
-            }
+        public global::System.String? Token { get; }
 
-            return new global::StrawberryShake.OperationResult<ILoginUserResult>(data?.Result, data?.Info, _resultDataFactory, errors);
-        }
+        public global::System.String? Expired { get; }
 
-        private (ILoginUserResult, LoginUserResultInfo) BuildData(global::System.Text.Json.JsonElement obj)
-        {
-            var entityIds = new global::System.Collections.Generic.HashSet<global::StrawberryShake.EntityId>();
-            global::StrawberryShake.IEntityStoreSnapshot snapshot = default !;
-            _entityStore.Update(session =>
-            {
-                snapshot = session.CurrentSnapshot;
-            });
-            var resultInfo = new LoginUserResultInfo(DeserializeILoginUser_LoginUser(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "loginUser")), entityIds, snapshot.Version);
-            return (_resultDataFactory.Create(resultInfo), resultInfo);
-        }
-
-        private global::Tokopodia.State.UserTokenData? DeserializeILoginUser_LoginUser(global::System.Text.Json.JsonElement? obj)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
-            }
-
-            var typename = obj.Value.GetProperty("__typename").GetString();
-            if (typename?.Equals("UserToken", global::System.StringComparison.Ordinal) ?? false)
-            {
-                return new global::Tokopodia.State.UserTokenData(typename, token: DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "token")), expired: DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "expired")), message: DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "message")));
-            }
-
-            throw new global::System.NotSupportedException();
-        }
-
-        private global::System.String? DeserializeString(global::System.Text.Json.JsonElement? obj)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
-            }
-
-            return _stringParser.Parse(obj.Value.GetString()!);
-        }
+        public global::System.String? Message { get; }
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
@@ -1693,26 +1713,6 @@ namespace Tokopodia.State
         public global::System.String? Email { get; }
 
         public global::System.DateTimeOffset? CreatedDate { get; }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
-    public partial class UserTokenData
-    {
-        public UserTokenData(global::System.String __typename, global::System.String? token = default !, global::System.String? expired = default !, global::System.String? message = default !)
-        {
-            this.__typename = __typename ?? throw new global::System.ArgumentNullException(nameof(__typename));
-            Token = token;
-            Expired = expired;
-            Message = message;
-        }
-
-        public global::System.String __typename { get; }
-
-        public global::System.String? Token { get; }
-
-        public global::System.String? Expired { get; }
-
-        public global::System.String? Message { get; }
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.4.1.0")]
