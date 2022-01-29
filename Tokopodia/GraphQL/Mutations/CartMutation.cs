@@ -89,23 +89,26 @@ namespace Tokopodia.GraphQL.Mutations
 
       if (buyyer == null)
       {
-        Console.WriteLine("Buyyer Not Found");
+        throw new Exception("Buyer Not Found");
       }
 
       //Validasi input stock
       if (input.Quantity < 0 || input.Quantity >= product.Stock)
       {
-        Console.WriteLine("Quantity cannot be negative");
+        throw new Exception("Quantity cannot be negative");
       }
 
       //Validasi lat dan long seller
       if (seller.LatSeller == 0 || seller.LongSeller == 0)
       {
-        Console.WriteLine("Seller has not input Lat and Long");
-
+        throw new Exception("Seller has not input Lat and Long");
       }
 
       //Validasi Input Jasa Kirim
+      if (!(input.ShippingTypeId == 1 || input.ShippingTypeId == 2 || input.ShippingTypeId == 3))
+      {
+        throw new ShippingNotFound();
+      }
 
 
             //Validasi lat dan long buyer
@@ -113,7 +116,7 @@ namespace Tokopodia.GraphQL.Mutations
             {
                 if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
                 {
-                    Console.WriteLine("Buyer has not input Lat and Long");
+                    throw new Exception("Buyer has not input Lat and Long");
                 }
                 input.LatBuyer = buyyer.latBuyer;
                 input.LongBuyer = buyyer.longBuyer;
@@ -165,6 +168,7 @@ namespace Tokopodia.GraphQL.Mutations
         [Service] IUser user,
         [Service] IBuyerProfile buyerProfile,
         [Service] AppDbContext context,
+        [Service] IDianterExpressDataClient _diantarExpressClient,
         [Service] IHttpContextAccessor httpContextAccessor)
     {
       var userId = httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
@@ -182,46 +186,70 @@ namespace Tokopodia.GraphQL.Mutations
 
       var buyyer = context.BuyerProfiles.Where(c => c.Id == buyerResult.Id).FirstOrDefault();
 
-      var cartId = context.Carts.Where(c => c.Id == input.CartId).FirstOrDefault();
-
-      var product = context.Products.Where(p => p.Id == cartId.ProductId).FirstOrDefault();
-
       if (buyyer == null)
       {
-        Console.WriteLine("Buyyer Not Found");
+        throw new Exception("Buyer Not Found");
       }
 
-      //Validasi input stock
-      if (input.Quantity < 0 || input.Quantity <= product.Stock)
+      var cart = context.Carts.Where(c => c.Id == input.CartId).FirstOrDefault();
+      if (cart != null)
       {
-        Console.WriteLine("Quantity cannot be negative");
-      }
+        if(cart.BuyerId != buyerResult.Id)
+        {
+            throw new NotAccess();
+        }
+        var product = context.Products.Where(p => p.Id == cart.ProductId).FirstOrDefault();
+        //Validasi input stock
+            if (input.Quantity < 0 || input.Quantity >= product.Stock)
+            {
+                throw new Exception("Quantity cannot be negative");
+            }
 
-      //Validasi lat dan long buyer
-      /*if (input.LatBuyer == null || input.LongBuyer == null)
-      {
-          if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
-          {
-              Console.WriteLine("Buyer has not input Lat and Long");
-          }
-          input.LatBuyer = buyyer.latBuyer;
-          input.LongBuyer = buyyer.longBuyer;
+            //Validasi Input Jasa Kirim
+            if (!(input.ShippingTypeId == 1 || input.ShippingTypeId == 2 || input.ShippingTypeId == 3))
+            {
+                throw new ShippingNotFound();
+            }
 
-      }*/
+            //Validasi lat dan long buyer
+            if (input.LatBuyer == 0 || input.LongBuyer == 0)
+            {
+                if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
+                {
+                    throw new Exception("Buyer has not input Lat and Long");
+                }
+                input.LatBuyer = buyyer.latBuyer;
+                input.LongBuyer = buyyer.longBuyer;
 
-      var cart = new Cart
-      {
-        Id = input.CartId,
-        Quantity = input.Quantity,
-        LatBuyer = input.LatBuyer,
-        LongBuyer = input.LongBuyer,
-        ShippingTypeId = input.ShippingTypeId,
-      };
+            }
 
-      var ret = context.Carts.Update(cart);
-      await context.SaveChangesAsync();
+            var send = new CheckFeeInput
+            {
+                senderLat = cart.LatSeller,
+                senderLong = cart.LongSeller,
+                receiverLat = input.LatBuyer,
+                receiverLong = input.LongBuyer,
+                weight = input.Quantity * product.Weight,
+                shipmentTypeId = input.ShippingTypeId
+            };
 
-      return ret.Entity;
+            var msg = await _diantarExpressClient.CheckFee(send);
+            var fee = msg.data.fee;
+
+
+            cart.Quantity = input.Quantity;
+            cart.LatBuyer = input.LatBuyer;
+            cart.LongBuyer = input.LongBuyer;
+            cart.ShippingCost = fee;
+            cart.BillingSeller = product.Price * input.Quantity;
+            cart.Weight = input.Quantity * product.Weight;
+            cart.ShippingTypeId = input.ShippingTypeId;
+
+            var ret = context.Carts.Update(cart);
+            await context.SaveChangesAsync();
+
+            return ret.Entity;
+      }throw new CartNotFound();
     }
   }
 }
