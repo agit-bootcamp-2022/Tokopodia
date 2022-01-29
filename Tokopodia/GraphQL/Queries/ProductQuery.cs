@@ -51,6 +51,17 @@ namespace Tokopodia.GraphQL.Queries
         ProductBuyerInput input,
         [Service] AppDbContext context)
         {
+            if (input == null)
+            {
+                var productsall = context.Products;
+                return new ProductBuyerOutput(productsall);
+            }
+
+            if (input.Name == null && input.Category != null)
+            {
+                var productscat = context.Products.Where(o => o.Category.Contains(input.Category));
+                return new ProductBuyerOutput(productscat);
+            }
 
             var products = context.Products.Where(o => o.Name.Contains(input.Name));
 
