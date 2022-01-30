@@ -31,7 +31,7 @@ namespace Tokopodia.GraphQL.Queries
         }
 
         [Authorize(Roles = new[] { "Seller" })]
-        public async Task<SellerOutput> GetBuyerProfile([Service] IUser _user, [Service] ISellerProfile _buyerProfile)
+        public async Task<SellerOutput> GetSellerProfile([Service] IUser _user, [Service] ISellerProfile _buyerProfile)
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
             if (userId == null)
