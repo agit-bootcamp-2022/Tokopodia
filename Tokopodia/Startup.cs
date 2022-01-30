@@ -20,11 +20,15 @@ using Tokopodia.Helper;
 using Tokopodia.Data.Users;
 using Tokopodia.Data.BuyerProfiles;
 using Tokopodia.Data.SellerProfiles;
+using Tokopodia.SyncDataService.Http;
 using Tokopodia.Data.Carts;
 using Tokopodia.Data.Transactions;
 using Tokopodia.Data.Wallets;
 using Tokopodia.Data.Products;
-using Tokopodia.SyncDataService.Http;
+using Tokopodia.SyncDataService.GraphQLClients;
+using GraphQL.Client.Http;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Serializer.Newtonsoft;
 
 namespace Tokopodia
 {
@@ -68,14 +72,17 @@ namespace Tokopodia
                .AddTypeExtension<CartQuery>()
                .AddTypeExtension<BuyerProfileQuery>()
                .AddTypeExtension<SellerProfileQuery>()
-               .AddTypeExtension<TransactionMutation>()
+               .AddTypeExtension<TransactionQuery>()
                .AddTypeExtension<WalletQuery>()
+               .AddTypeExtension<TransactionQuery>()
            .AddMutationType(d => d.Name("Mutation"))
                .AddTypeExtension<Mutation>()
                .AddTypeExtension<CartMutation>()
                .AddTypeExtension<ProductMutation>()
                .AddTypeExtension<BuyerProfileMutation>()
                .AddTypeExtension<SellerProfileMutation>()
+               .AddTypeExtension<WalletMutation>()
+               .AddTypeExtension<TransactionMutation>()
                .AddTypeExtension<WalletMutation>();
 
       services.AddHttpContextAccessor();
@@ -88,9 +95,11 @@ namespace Tokopodia
       services.AddScoped<IWallet, WalletDAL>();
       services.AddScoped<IProduct, ProductDAL>();
       services.AddScoped<IDianterExpressDataClient, HttpDianterExpressDataClient>();
+      services.AddScoped<OwnerConsumer>();
       services.AddControllers();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -111,7 +120,7 @@ namespace Tokopodia
       services
         .AddUangTrans()
         .ConfigureHttpClient(client => client.BaseAddress = new Uri(appSettings.UangTrans));
-
+      services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(appSettings.UangTrans, new NewtonsoftJsonSerializer()));
       var key = Encoding.ASCII.GetBytes(appSettings.Secret);
       services.AddAuthentication(x =>
       {

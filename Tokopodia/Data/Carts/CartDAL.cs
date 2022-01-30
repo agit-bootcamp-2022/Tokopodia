@@ -15,11 +15,17 @@ namespace Tokopodia.Data.Carts
     {
       _db = db;
     }
-    // TODO: getallbystatusoncart harus include product => update model lagi
-    public async Task<IEnumerable<Cart>> GetAllByStatusOnCart()
+    public async Task<IEnumerable<Cart>> GetAllByStatusOnCartAndBuyerId(int buyerId)
     {
-      var result = await _db.Carts.Where(c => c.Status == "OnCart").ToListAsync();
+      var result = await _db.Carts.Include(c => c.Product).Include(c => c.Buyer).Include(c => c.Seller).Where(c => c.Status == "OnCart" && c.BuyerId == buyerId).ToListAsync();
       return result;
+    }
+
+    public async Task<Cart> Update(Cart input)
+    {
+      var result = _db.Carts.Update(input);
+      await _db.SaveChangesAsync();
+      return result.Entity;
     }
   }
 }

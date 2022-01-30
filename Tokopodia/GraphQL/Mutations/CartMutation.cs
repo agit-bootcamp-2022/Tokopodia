@@ -58,7 +58,8 @@ namespace Tokopodia.GraphQL.Mutations
         {
           return new CartStatusOutput("Data in the cart cannot be deleted");
         }
-      }throw new CartNotFound();
+      }
+      throw new CartNotFound();
     }
 
     public async Task<Cart> AddCartAsync(
@@ -93,7 +94,7 @@ namespace Tokopodia.GraphQL.Mutations
       }
 
       //Validasi input stock
-      if (input.Quantity < 0 || input.Quantity >= product.Stock)
+      if (input.Quantity < 0 || input.Quantity > product.Stock)
       {
         throw new Exception("Quantity cannot be negative");
       }
@@ -111,51 +112,51 @@ namespace Tokopodia.GraphQL.Mutations
       }
 
 
-            //Validasi lat dan long buyer
-            if (input.LatBuyer == 0 || input.LongBuyer == 0)
-            {
-                if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
-                {
-                    throw new Exception("Buyer has not input Lat and Long");
-                }
-                input.LatBuyer = buyyer.latBuyer;
-                input.LongBuyer = buyyer.longBuyer;
+      //Validasi lat dan long buyer
+      if (input.LatBuyer == 0 || input.LongBuyer == 0)
+      {
+        if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
+        {
+          throw new Exception("Buyer has not input Lat and Long");
+        }
+        input.LatBuyer = buyyer.latBuyer;
+        input.LongBuyer = buyyer.longBuyer;
 
-            }
+      }
 
-            var send = new CheckFeeInput
-            {
-                senderLat = seller.LatSeller,
-                senderLong = seller.LongSeller,
-                receiverLat = input.LatBuyer,
-                receiverLong = input.LongBuyer,
-                weight = input.Quantity * product.Weight,
-                shipmentTypeId = input.ShippingTypeId
-            };
+      var send = new CheckFeeInput
+      {
+        senderLat = seller.LatSeller,
+        senderLong = seller.LongSeller,
+        receiverLat = input.LatBuyer,
+        receiverLong = input.LongBuyer,
+        weight = input.Quantity * product.Weight,
+        shipmentTypeId = input.ShippingTypeId
+      };
 
-            var msg = await _diantarExpressClient.CheckFee(send);
-            var fee = msg.data.fee;
-            var cart = new Cart
-              {
-                BuyerId = buyerResult.Id,
-                ProductId = input.ProductId,
-                SellerId = seller.Id,
-                Quantity = input.Quantity,
-                Weight = input.Quantity * product.Weight,
-                BillingSeller = product.Price * input.Quantity,
-                LatSeller = seller.LatSeller,
-                LongSeller = seller.LongSeller,
-                LatBuyer = input.LatBuyer,
-                LongBuyer = input.LongBuyer,
-                ShippingTypeId = input.ShippingTypeId,
-                ShippingCost = fee,
-                Status = "OnCart",
-                Product = product,
-                Buyer = buyyer,
-                Seller = seller
-              };
+      var msg = await _diantarExpressClient.CheckFee(send);
+      var fee = msg.data.fee;
+      var cart = new Cart
+      {
+        BuyerId = buyerResult.Id,
+        ProductId = input.ProductId,
+        SellerId = seller.Id,
+        Quantity = input.Quantity,
+        Weight = input.Quantity * product.Weight,
+        BillingSeller = product.Price * input.Quantity,
+        LatSeller = seller.LatSeller,
+        LongSeller = seller.LongSeller,
+        LatBuyer = input.LatBuyer,
+        LongBuyer = input.LongBuyer,
+        ShippingTypeId = input.ShippingTypeId,
+        ShippingCost = fee,
+        Status = "OnCart",
+        Product = product,
+        Buyer = buyyer,
+        Seller = seller
+      };
 
-            
+
 
       var ret = context.Carts.Add(cart);
       await context.SaveChangesAsync();
@@ -194,62 +195,63 @@ namespace Tokopodia.GraphQL.Mutations
       var cart = context.Carts.Where(c => c.Id == input.CartId).FirstOrDefault();
       if (cart != null)
       {
-        if(cart.BuyerId != buyerResult.Id)
+        if (cart.BuyerId != buyerResult.Id)
         {
-            throw new NotAccess();
+          throw new NotAccess();
         }
         var product = context.Products.Where(p => p.Id == cart.ProductId).FirstOrDefault();
         //Validasi input stock
-            if (input.Quantity < 0 || input.Quantity >= product.Stock)
-            {
-                throw new Exception("Quantity cannot be negative");
-            }
+        if (input.Quantity < 0 || input.Quantity >= product.Stock)
+        {
+          throw new Exception("Quantity cannot be negative");
+        }
 
-            //Validasi Input Jasa Kirim
-            if (!(input.ShippingTypeId == 1 || input.ShippingTypeId == 2 || input.ShippingTypeId == 3))
-            {
-                throw new ShippingNotFound();
-            }
+        //Validasi Input Jasa Kirim
+        if (!(input.ShippingTypeId == 1 || input.ShippingTypeId == 2 || input.ShippingTypeId == 3))
+        {
+          throw new ShippingNotFound();
+        }
 
-            //Validasi lat dan long buyer
-            if (input.LatBuyer == 0 || input.LongBuyer == 0)
-            {
-                if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
-                {
-                    throw new Exception("Buyer has not input Lat and Long");
-                }
-                input.LatBuyer = buyyer.latBuyer;
-                input.LongBuyer = buyyer.longBuyer;
+        //Validasi lat dan long buyer
+        if (input.LatBuyer == 0 || input.LongBuyer == 0)
+        {
+          if (buyyer.latBuyer == 0 || buyyer.longBuyer == 0)
+          {
+            throw new Exception("Buyer has not input Lat and Long");
+          }
+          input.LatBuyer = buyyer.latBuyer;
+          input.LongBuyer = buyyer.longBuyer;
 
-            }
+        }
 
-            var send = new CheckFeeInput
-            {
-                senderLat = cart.LatSeller,
-                senderLong = cart.LongSeller,
-                receiverLat = input.LatBuyer,
-                receiverLong = input.LongBuyer,
-                weight = input.Quantity * product.Weight,
-                shipmentTypeId = input.ShippingTypeId
-            };
+        var send = new CheckFeeInput
+        {
+          senderLat = cart.LatSeller,
+          senderLong = cart.LongSeller,
+          receiverLat = input.LatBuyer,
+          receiverLong = input.LongBuyer,
+          weight = input.Quantity * product.Weight,
+          shipmentTypeId = input.ShippingTypeId
+        };
 
-            var msg = await _diantarExpressClient.CheckFee(send);
-            var fee = msg.data.fee;
+        var msg = await _diantarExpressClient.CheckFee(send);
+        var fee = msg.data.fee;
 
 
-            cart.Quantity = input.Quantity;
-            cart.LatBuyer = input.LatBuyer;
-            cart.LongBuyer = input.LongBuyer;
-            cart.ShippingCost = fee;
-            cart.BillingSeller = product.Price * input.Quantity;
-            cart.Weight = input.Quantity * product.Weight;
-            cart.ShippingTypeId = input.ShippingTypeId;
+        cart.Quantity = input.Quantity;
+        cart.LatBuyer = input.LatBuyer;
+        cart.LongBuyer = input.LongBuyer;
+        cart.ShippingCost = fee;
+        cart.BillingSeller = product.Price * input.Quantity;
+        cart.Weight = input.Quantity * product.Weight;
+        cart.ShippingTypeId = input.ShippingTypeId;
 
-            var ret = context.Carts.Update(cart);
-            await context.SaveChangesAsync();
+        var ret = context.Carts.Update(cart);
+        await context.SaveChangesAsync();
 
-            return ret.Entity;
-      }throw new CartNotFound();
+        return ret.Entity;
+      }
+      throw new CartNotFound();
     }
   }
 }

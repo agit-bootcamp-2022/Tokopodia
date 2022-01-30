@@ -27,7 +27,7 @@ namespace Tokopodia.GraphQL.Queries
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public SellerOutput ShowProfile()
+        public SellerOutput SellerProfile()
         {
             var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
             if (userName == null)

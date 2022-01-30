@@ -32,12 +32,13 @@ namespace Tokopodia.Data.SellerProfiles
         public async Task<SellerProfile> GetByUserId(string userId)
         {
             var result = await _db.SellerProfiles.Where(b => b.UserId == userId).Include(b => b.User).FirstOrDefaultAsync();
-            return result; ;
+            return result;
         }
 
-        public Task<SellerProfile> GetProfileById(int profileId)
+        public async Task<SellerProfile> GetProfileById(int profileId)
         {
-            throw new System.NotImplementedException();
+            var result = await _db.SellerProfiles.Include(b => b.User).Where(b => b.Id == profileId).FirstOrDefaultAsync();
+            return result;
         }
 
         public async Task<SellerProfile> Insert(SellerProfile profile)

@@ -11,23 +11,11 @@ namespace Tokopodia.Output
     public class ProductSellerOutput
     {
 
-        private readonly AppDbContext _context;
-
-        public ProductSellerOutput([Service] AppDbContext context)
+        public ProductSellerOutput(Task<List<Product>> products)
         {
-            _context = context;
-        }
-
-        public ProductSellerOutput(Task<List<Product>> products, int sellerId)
-        {
-            var seller = _context.SellerProfiles.Where(o => o.Id == sellerId).FirstOrDefault();
-
-            SellerName = seller.ShopName;
-
             Product = products;
         }
 
-        public string SellerName { get; set; }
         public Task<List<Product>> Product { get; set; }
     }
 }

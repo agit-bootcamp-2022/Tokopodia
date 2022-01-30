@@ -9,6 +9,7 @@ namespace Tokopodia.Data.Carts
 {
   public interface ICart
   {
-    Task<IEnumerable<Cart>> GetAllByStatusOnCart();
+    Task<IEnumerable<Cart>> GetAllByStatusOnCartAndBuyerId(int buyerId);
+    Task<Cart> Update(Cart input);
   }
 }

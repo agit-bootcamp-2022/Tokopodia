@@ -55,7 +55,7 @@ namespace Tokopodia.Data.Users
           throw new Exception("Invalid username or password.");
         profileId = userProfile.Id;
       }
-      else
+      else if (userType == "Seller")
       {
         var userProfile = await _db.SellerProfiles.Where(bp => bp.UserId == account.Id).SingleOrDefaultAsync();
         if (userProfile == null)
@@ -63,7 +63,7 @@ namespace Tokopodia.Data.Users
         profileId = userProfile.Id;
       }
 
-
+      int hours = 3;
       List<Claim> claims = new List<Claim>();
       claims.Add(new Claim(ClaimTypes.Name, account.UserName));
       claims.Add(new Claim("UserId", account.Id.ToString()));
@@ -72,13 +72,15 @@ namespace Tokopodia.Data.Users
       foreach (var role in roles)
       {
         claims.Add(new Claim(ClaimTypes.Role, role));
+        if (role == "Courier")
+          hours = 120;
       }
       var tokenHandler = new JwtSecurityTokenHandler();
       var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
       var tokenDescriptor = new SecurityTokenDescriptor
       {
         Subject = new ClaimsIdentity(claims),
-        Expires = DateTime.UtcNow.AddHours(3),
+        Expires = DateTime.UtcNow.AddHours(hours),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
           SecurityAlgorithms.HmacSha256Signature)
 

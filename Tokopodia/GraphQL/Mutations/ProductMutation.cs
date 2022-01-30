@@ -49,6 +49,7 @@ namespace Tokopodia.GraphQL.Mutations
             var product = new Product
             {
                 SellerId = profileResult.Id,
+                ShopName = profileResult.ShopName,
                 Name = input.Name,
                 Category = input.Category,
                 Description = input.Description,
@@ -87,6 +88,9 @@ namespace Tokopodia.GraphQL.Mutations
                 throw new UserNotFoundException();
 
             var seller = context.Products.Where(o => o.SellerId == profileResult.Id).FirstOrDefault();
+
+            if (seller == null)
+                throw new ProductNotFound();
 
             if (input.Stock < 0 || input.Price < 0 || input.Weight < 0)
                 throw new ValueNegative();
