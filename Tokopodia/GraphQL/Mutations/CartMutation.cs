@@ -85,13 +85,20 @@ namespace Tokopodia.GraphQL.Mutations
 
       var buyyer = context.BuyerProfiles.Where(c => c.Id == buyerResult.Id).FirstOrDefault();
 
-      var product = context.Products.Where(p => p.Id == input.ProductId).FirstOrDefault();
-      var seller = context.SellerProfiles.Where(s => s.Id == product.SellerId).FirstOrDefault();
-
       if (buyyer == null)
       {
         throw new Exception("Buyer Not Found");
       }
+
+      var product = context.Products.Where(p => p.Id == input.ProductId).FirstOrDefault();
+      
+      
+      if (product == null)
+      {
+        throw new Exception("Product Not Found");
+      }
+
+      var seller = context.SellerProfiles.Where(s => s.Id == product.SellerId).FirstOrDefault();
 
       //Validasi input stock
       if (input.Quantity < 0 || input.Quantity > product.Stock)
